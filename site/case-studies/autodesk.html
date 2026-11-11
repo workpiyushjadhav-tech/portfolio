@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Autodesk ACC: connecting change and clash analysis | Piyush Jadhav</title>
+<meta name="description" content="Autodesk Construction Cloud: a research-led direction for connecting Change Analysis and Clash Analysis into one workflow. MSc industry project, UX case study by Piyush Jadhav.">
+<meta name="theme-color" content="#FBF6EC">
+<meta property="og:title" content="Autodesk ACC: connecting change and clash | Piyush Jadhav">
+<meta property="og:description" content="Autodesk Construction Cloud: a research-led direction for connecting Change Analysis and Clash Analysis into one workflow. MSc industry project, UX case study by Piyush Jadhav.">
+<meta property="og:type" content="article">
+<link rel="icon" href="../favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&amp;family=Work+Sans:wght@400;500;600&amp;family=Caveat:wght@500;600&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/site.css">
+<link rel="stylesheet" href="../css/tailwind.css">
+<link rel="stylesheet" href="../css/case-study.css">
+<link rel="stylesheet" href="../css/nav-theme.css">
+<script>
+document.documentElement.classList.add('js');
+try{var d=document.documentElement,s=JSON.parse(localStorage.getItem('pj-a11y')||'null');
+if(!s){s={calm:matchMedia('(prefers-reduced-motion: reduce)').matches,contrast:matchMedia('(prefers-contrast: more)').matches}}
+if(s.text)d.dataset.a11yText=s.text;
+['contrast','font','calm','links','space'].forEach(function(k){if(s[k])d.setAttribute('data-a11y-'+k,'')})}catch(e){}
+try{var t=null;try{t=localStorage.getItem('pj-theme')}catch(e){}
+if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+d.dataset.theme=t;var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',t==='dark'?'#17140F':'#FBF6EC')}catch(e){}
+</script>
+
+<style id="v2-css">
+
+/* ===== DEMO: new-theme components on the present layout ===== */
+.demo-flag{max-width:1060px;margin:0 auto;padding:10px 16px;border:1px dashed var(--accent-btn);border-radius:12px;font-size:.8125rem;color:var(--ink-soft);text-align:center}
+.cmp{--gap:20px}
+.cmp-wide{max-width:none;margin:28px 0}
+/* decision cards */
+.decisions{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap);margin:8px 0 28px}
+.decision{display:flex;flex-direction:column;gap:18px;padding:28px;border:1px solid var(--line-strong);border-radius:var(--r-lg);background:var(--card)}
+.decision .num{font-size:.8125rem;font-weight:700;color:var(--accent-btn)}
+.decision h3{margin:0;font-family:var(--font-display);font-size:1.5rem;line-height:1.2;letter-spacing:-.015em}
+.decision dl{display:grid;gap:14px;margin:0;flex:1;align-content:space-between}
+.decision dt{margin:0 0 4px;font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint)}
+.decision dd{margin:0;font-size:.9375rem;line-height:1.6;color:var(--ink)}
+.decision .cost dd{color:var(--ink-soft)}
+/* options considered */
+.options{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0 0 8px;padding:0;list-style:none}
+.options li{position:relative;display:flex;flex-direction:column;gap:6px;padding:16px;border:1.5px solid var(--line);border-radius:var(--r-md,14px);font-size:.875rem;line-height:1.45;color:var(--ink-soft);background:transparent}
+.options li strong{color:var(--ink);font-size:.9375rem}
+.options li.is-chosen{border:1.5px solid var(--accent-btn);background:var(--card);color:var(--ink)}
+.options .badge{position:absolute;top:-11px;left:14px;padding:2px 10px;border-radius:999px;background:var(--accent-btn);color:var(--paper);font-size:.6875rem;font-weight:700}
+.options-label{margin:0 0 12px;font-size:.8125rem;font-weight:700;color:var(--ink-faint)}
+/* solution gallery */
+.solution{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--gap);margin:8px 0 32px}
+.solution article{display:flex;flex-direction:column;overflow:hidden;border:1px solid var(--line-strong);border-radius:var(--r-lg);background:var(--card)}
+.solution img{display:block;width:100%;aspect-ratio:16/10;object-fit:contain;padding:16px 16px 0;background:var(--paper)}
+.solution .body{display:flex;flex-direction:column;gap:6px;padding:16px 18px 20px}
+.solution .step{font-size:.75rem;font-weight:700;color:var(--accent-btn)}
+.solution h3{margin:0;font-family:var(--font-display);font-size:1.125rem}
+.solution p{margin:0;font-size:.875rem;line-height:1.55;color:var(--ink-soft)}
+/* stat strip */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);margin:0 0 36px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.stats div{padding:22px 18px;border-left:1px solid var(--line)}
+.stats div:first-child{border-left:0;padding-left:0}
+.stats dt{order:2;margin-top:6px;font-size:.8125rem;line-height:1.4;color:var(--ink-soft)}
+.stats dd{order:1;margin:0;color:var(--ink);font-family:var(--font-display);font-size:2.25rem;line-height:1;letter-spacing:-.02em;font-weight:700}
+.stats div{display:flex;flex-direction:column}
+.stats .low dd{color:var(--accent-btn)}.decisions,.solution,.ba{margin-top:28px}
+/* before / after */
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap);margin:24px 0 32px}
+.ba figure{margin:0;display:flex;flex-direction:column;gap:12px;padding:14px 14px 20px;border:1px solid var(--line-strong);border-radius:var(--r-lg);background:var(--card)}
+.ba img{display:block;width:100%;border-radius:calc(var(--r-lg) - 6px)}
+.ba .tag{align-self:flex-start;padding:3px 12px;border-radius:999px;border:1px solid var(--line-strong);font-size:.75rem;font-weight:700}
+.ba .is-after .tag{background:var(--accent-btn);border-color:var(--accent-btn);color:var(--paper)}
+.ba figcaption{padding:0 6px;font-size:.9375rem;line-height:1.6;color:var(--ink-soft)}
+@media(max-width:900px){.options,.stats{grid-template-columns:1fr 1fr}.stats div:nth-child(3){border-left:0;padding-left:0}.stats div:nth-child(n+3){border-top:1px solid var(--line)}}
+@media(max-width:640px){.decisions,.ba,.solution,.options{grid-template-columns:1fr}.stats dd{font-size:1.875rem}}
+
+/* personas, media, task bars */
+.personas{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}
+.persona{display:flex;gap:18px;align-items:center;padding:16px;border:1px solid var(--line-strong);border-radius:var(--r-lg);background:var(--card)}
+.persona img{flex:none;width:96px;height:122px;object-fit:cover;border-radius:calc(var(--r-lg) - 6px);background:var(--line)}
+.persona-name{margin:0;font-family:var(--font-display);font-size:1.0625rem;font-weight:700;color:var(--ink)}
+.persona-role{margin:2px 0 10px;font-size:.8125rem;color:var(--ink-faint)}
+.persona blockquote{margin:0;font-size:.9375rem;line-height:1.55;color:var(--ink-soft);font-style:italic}
+.media{margin:28px auto}
+.media img{display:block;width:100%;height:auto;border-radius:var(--r-lg);border:1.5px solid var(--line-strong)}
+.media figcaption{margin-top:10px;font-size:.8125rem;color:var(--ink-faint);text-align:center}
+.reasons{margin:0;padding-left:1.2em;display:grid;gap:8px}
+.tasks{display:grid;gap:10px}
+.tasks .options-label{margin:0 0 4px}
+.task{display:grid;grid-template-columns:200px 1fr 52px;align-items:center;gap:16px;font-size:.9375rem}
+.task .bar{position:relative;height:10px;border-radius:999px;background:var(--line)}
+.task .bar::after{content:'';position:absolute;inset:0 auto 0 0;width:var(--v);border-radius:inherit;background:var(--ink)}
+.task.is-low .bar::after{background:var(--accent-btn)}
+.task strong{text-align:right}
+@media(max-width:640px){.personas{grid-template-columns:1fr}.task{grid-template-columns:1fr 44px;gap:6px 12px}.task .bar{grid-column:1/-1;order:3}}
+
+/* ==========================================================================
+   Culinarr v2 — structure and interactions from the three reference pages (paw-pins, picasso,
+   reshatara), kept on the Culinarr theme: Fraunces + Work Sans, the site's colour tokens.
+   Everything is scoped to #cs2 so the shared header, side nav, accessibility panel,
+   "more case studies", Contact and footer keep their existing styling.
+   ========================================================================== */
+@property --o2bg{syntax:'<color>';inherits:true;initial-value:#FAF6EC}
+:root{--font-body:'Work Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--pad:clamp(20px,5vw,64px);--sec:clamp(72px,11vw,150px)}
+html{scroll-behavior:auto!important}
+
+/* page fade between pages (from the reference) */
+html::before{content:'';position:fixed;inset:0;z-index:99;background:var(--paper);opacity:1;pointer-events:none;animation:smReveal .5s ease 2.2s forwards}
+html.sm-in::before{opacity:0;animation:none;transition:opacity .5s ease}
+html.sm-out::before{opacity:1;animation:none;transition:opacity .28s ease}
+@keyframes smReveal{to{opacity:0}}
+html[data-a11y-calm]::before,html.v2-rm::before{display:none}
+
+/* header floats over the cover, as the reference's top bar does */
+body.case-page .site-header{position:fixed;top:20px;left:50%;transform:translateX(-50%);margin:0;z-index:30}
+@media(max-width:640px){body.case-page .site-header{top:12px}}
+
+#cs2{position:relative;isolation:isolate;--o2bg:var(--paper);transition:--o2bg .9s ease}
+#cs2[data-theme="sand"]{--o2bg:color-mix(in srgb,var(--paper) 90%,var(--ink) 10%)}
+#cs2 .bg{position:fixed;inset:0;z-index:-1;background:var(--o2bg);pointer-events:none}
+#cs2.rm .bg{transition:none}
+.cs-main{padding-top:0}.cs-main::before{display:none}
+#cs2 main>section.blk,#cs2 main>section.brief,#cs2 main>section.intro{border-top:0}
+#cs2 .wrap{width:min(1100px,calc(100% - 2*var(--pad)));margin-inline:auto}
+#cs2 .disp{font-family:var(--font-display);letter-spacing:-.02em}
+#cs2 .kick{margin:0 0 14px;font-size:.875rem;font-weight:600;color:var(--accent-btn)}
+#cs2 .kick::before{content:'[ '}#cs2 .kick::after{content:' ]'}
+#cs2 .sec-h{margin:0 0 28px;max-width:20ch;font-size:clamp(2rem,4.6vw,3.5rem);line-height:1.08;text-wrap:balance}
+#cs2 .blk{position:relative;padding:var(--sec) 0 0}
+#cs2 .prose{max-width:760px}
+#cs2 .prose>p,#cs2 .lede-p,#cs2 .blk p{font-size:1.0625rem;line-height:1.7;color:var(--ink-soft)}
+#cs2 .blk p+p{margin-top:1.1rem}
+#cs2 .blk strong,#cs2 .blk b{color:var(--ink)}
+#cs2 .blk a{color:var(--accent-btn);text-decoration:underline;text-underline-offset:3px}
+#cs2 .cap{margin:56px 0 18px;font-family:var(--font-body);line-height:1.4;font-size:.8125rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint)}
+#cs2 .cap.first{margin-top:36px}
+#cs2 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* reveal */
+#cs2 .rv{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s cubic-bezier(.22,1,.36,1)}
+#cs2 .rv.in,#cs2.rm .rv{opacity:1;transform:none}
+#cs2.rm *{transition-duration:.01ms!important;animation-duration:.01ms!important}
+
+/* ---------- cover: pinned photo, sheet slides up over it ---------- */
+#cs2 .intro{position:relative}
+#cs2 .h-pin{position:sticky;top:0;z-index:0;height:100vh;height:100svh;overflow:hidden;background:#2A2622}
+#cs2 .h-pin img{width:100%;height:100%;object-fit:cover;object-position:50% 50%;transform-origin:50% 40%;will-change:transform,filter}
+#cs2 .h-shade{position:absolute;inset:0;background:#120F0B;opacity:0;pointer-events:none}
+#cs2 .sheet{position:relative;z-index:1;margin-top:-1px;padding:clamp(56px,8vh,88px) 0 var(--sec);background:var(--paper);will-change:clip-path;clip-path:inset(0 round 48px 48px 0 0)}
+#cs2 .sheet .wrap{display:flex;flex-direction:column;align-items:center;text-align:center}
+#cs2 .sheet h1{margin:6px 0 16px;text-wrap:balance;font-size:clamp(3rem,8vw,6.5rem);line-height:1;font-weight:700}
+#cs2 .sheet-sum{max-width:44ch;font-size:clamp(1.0625rem,1.8vw,1.25rem);line-height:1.6;color:var(--ink-soft)}
+#cs2 .card{align-self:stretch;margin-top:48px;text-align:left;padding:clamp(22px,3vw,36px);background:var(--card);border:1px solid var(--line-strong);border-radius:var(--r-lg);opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s cubic-bezier(.22,1,.36,1)}
+#cs2 .card.in,#cs2.rm .card{opacity:1;transform:none}
+#cs2 .facts{display:grid;grid-template-columns:repeat(3,1fr);gap:28px 40px;margin:0}
+#cs2 .facts>div{opacity:0;transform:translateY(10px);transition:opacity .6s ease,transform .6s ease;transition-delay:calc(var(--k,0)*90ms + 250ms)}
+#cs2 .card.in .facts>div,#cs2.rm .facts>div{opacity:1;transform:none}
+#cs2 .facts dt{margin:0 0 6px;font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint)}
+#cs2 .facts dd{margin:0;font-size:1rem;line-height:1.4;color:var(--ink);font-weight:500}
+#cs2 .facts dd small{display:block;margin-top:4px;font-size:.8125rem;font-weight:400;line-height:1.45;color:var(--ink-soft)}
+#cs2 .live{display:inline-flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none}
+#cs2 .live i{width:9px;height:9px;border-radius:50%;background:#2E9E5B;box-shadow:0 0 0 0 rgba(46,158,91,.5);animation:pulse 2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 9px rgba(46,158,91,0)}100%{box-shadow:0 0 0 0 rgba(46,158,91,0)}}
+@media(max-width:900px){#cs2 .facts{grid-template-columns:1fr 1fr}}@media(max-width:560px){#cs2 .facts{grid-template-columns:1fr}}
+
+/* ---------- brief: statement lights up word by word ---------- */
+#cs2 .brief{position:relative;height:230vh}
+#cs2 .stage{position:sticky;top:0;height:100vh;height:100svh;display:flex;flex-direction:column;justify-content:center;padding-block:112px 32px}
+#cs2 .statement{margin:0;max-width:34ch;font-size:clamp(1.375rem,min(3.4vw,5vh),2.75rem);line-height:1.2;font-weight:600}
+#cs2 .statement .w{color:color-mix(in srgb,var(--ink) 18%,transparent);transition:color .35s ease}
+#cs2 .statement .w.lit{color:var(--ink)}
+#cs2.rm .statement .w{color:var(--ink)}
+#cs2 .goals{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin:32px 0 0;padding:0;list-style:none}
+#cs2 .goals li{padding-top:16px;border-top:1px solid var(--line-strong);opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;transition-delay:calc(var(--k,0)*110ms)}
+#cs2 .goals.in li,#cs2.rm .goals li{opacity:1;transform:none}
+#cs2 .goals b{display:block;margin-bottom:6px;font-family:var(--font-display);font-size:1.25rem}
+#cs2 .goals span{font-size:.9375rem;line-height:1.55;color:var(--ink-soft)}
+@media(max-width:760px){#cs2 .goals{grid-template-columns:1fr;gap:16px}#cs2 .brief{height:200vh}}
+
+/* ---------- research rows + people chart ---------- */
+#cs2 .srows{display:grid;gap:clamp(40px,6vw,72px);margin:44px 0 0}
+#cs2 .srow{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(24px,4vw,56px);align-items:center}
+#cs2 .srow:nth-child(even) figure{order:2}
+#cs2 .srow figure{margin:0;overflow:hidden;border:1.5px solid var(--line-strong);border-radius:var(--r-lg);background:var(--card)}
+#cs2 .srow img{display:block;width:100%;height:auto;transition:transform 1.2s cubic-bezier(.22,1,.36,1)}
+#cs2 .srow.in img{transform:scale(1.03)}
+#cs2 .srow-n{font-size:.8125rem;font-weight:700;color:var(--accent-btn)}
+#cs2 .srow h3{margin:8px 0 12px;font-size:clamp(1.5rem,2.6vw,2rem);line-height:1.15}
+
+/* ---------- direction ---------- */
+
+/* ---------- personas: tap to open ---------- */
+
+#cs2 .pc{display:flex;gap:18px;align-items:center;width:100%;padding:16px;text-align:left;font:inherit;color:inherit;cursor:pointer;border:1px solid var(--line-strong);border-radius:var(--r-lg);background:var(--card);transition:border-color .25s,transform .25s,box-shadow .25s}
+#cs2 .pc:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(60,40,10,.08)}
+#cs2 .pc[aria-expanded="true"]{border-color:var(--accent-btn)}
+#cs2 .pc img{flex:none;width:96px;height:122px;object-fit:cover;border-radius:calc(var(--r-lg) - 6px)}
+#cs2 .pc-n{display:block;font-family:var(--font-display);font-size:1.0625rem;font-weight:700}
+#cs2 .pc-r{display:block;margin:2px 0 10px;font-size:.8125rem;color:var(--ink-faint)}
+#cs2 .pc-t{display:inline-flex;align-items:center;gap:6px;font-size:.8125rem;font-weight:600;color:var(--accent-btn)}
+#cs2 .pc-t::after{content:'+';font-size:1.1rem;line-height:1;transition:transform .3s}
+#cs2 .pc[aria-expanded="true"] .pc-t::after{transform:rotate(45deg)}
+@keyframes openIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+
+/* ---------- structure: journey + IA ---------- */
+#cs2 .media{margin:36px 0 0}
+#cs2 .ia{padding:clamp(22px,3vw,40px);background:var(--card);border:1px solid var(--line-strong);border-radius:var(--r-lg);overflow-x:auto}
+#cs2 .ia-root{display:block;width:fit-content;margin:0 auto;padding:10px 26px;border:1.5px solid var(--ink);border-radius:10px;background:var(--accent-btn);color:#fff;font-weight:700;font-size:.9375rem}
+#cs2 .ia-sub{display:block;margin:10px auto 28px;text-align:center;font-size:.8125rem;color:var(--ink-faint)}
+#cs2 .ia-br{position:relative;display:grid;grid-template-columns:repeat(7,minmax(128px,1fr));gap:14px;margin:0;padding:34px 0 0;list-style:none;min-width:980px}
+#cs2 .ia-br::before{content:'';position:absolute;top:0;left:7%;right:7%;height:15px;border:1px solid var(--line-strong);border-bottom:0;border-radius:10px 10px 0 0}
+#cs2 .ia-br::after{content:'';position:absolute;top:-14px;left:50%;height:14px;border-left:1px solid var(--line-strong)}
+#cs2 .ia-br>li{position:relative;min-width:0;opacity:0;transform:translateY(12px);transition:opacity .6s ease,transform .6s ease;transition-delay:calc(var(--k,0)*80ms)}
+#cs2 .ia.in .ia-br>li,#cs2.rm .ia-br>li{opacity:1;transform:none}
+#cs2 .ia-br>li::before{content:'';position:absolute;top:-19px;left:50%;height:19px;border-left:1px solid var(--line-strong)}
+#cs2 .ia-h{display:block;padding:9px 10px;border:1.5px solid var(--ink);border-radius:8px;background:var(--paper);font-weight:700;font-size:.875rem;text-align:center;line-height:1.3;color:var(--ink)}
+#cs2 .ia-br ul{position:relative;margin:0;padding:12px 0 0 14px;list-style:none;display:grid;gap:8px}
+#cs2 .ia-br ul::before{content:'';position:absolute;left:0;top:0;bottom:14px;border-left:1px solid var(--line-strong)}
+#cs2 .ia-br ul li{position:relative;padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:var(--paper);font-size:.8125rem;line-height:1.35;color:var(--ink-soft)}
+#cs2 .ia-br ul li::before{content:'';position:absolute;left:-14px;top:50%;width:14px;border-top:1px solid var(--line-strong)}
+@media(max-width:900px){#cs2 .ia-br{min-width:0;grid-template-columns:1fr;padding-top:30px}#cs2 .ia-br::before,#cs2 .ia-br::after,#cs2 .ia-br>li::before{display:none}}
+#cs2 .mc-btn{display:none;width:100%;margin-top:14px;padding:12px;font:inherit;font-weight:600;color:var(--accent-btn);background:transparent;border:1px solid var(--line-strong);border-radius:999px;cursor:pointer}
+@media(max-width:900px){#cs2 .mc-btn{display:block}#cs2 .mc-closed{max-height:260px;overflow:hidden;-webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent)}}
+
+/* ---------- design system ---------- */
+#cs2 .bolts{display:flex;gap:10px;height:280px}
+#cs2 .bolt{position:relative;flex:1 1 0;min-width:0;display:flex;flex-direction:column;justify-content:space-between;padding:18px 16px;text-align:left;font:inherit;cursor:pointer;border:1px solid var(--line-strong);border-radius:var(--r-lg);overflow:hidden;transition:flex-grow .6s cubic-bezier(.22,1,.36,1)}
+#cs2 .bolt.on{flex-grow:3.4}
+#cs2 .bolt .tag{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.85;writing-mode:horizontal-tb}
+#cs2 .bolt .in{display:grid;gap:6px;opacity:0;transform:translateY(8px);transition:opacity .4s ease,transform .4s ease}
+#cs2 .bolt.on .in{opacity:1;transform:none;transition-delay:.15s}
+#cs2 .bolt .nm{font-family:var(--font-display);font-size:1.375rem;font-weight:700}
+#cs2 .bolt .use{font-size:.8125rem;line-height:1.45;max-width:30ch}
+#cs2 .bolt .hex{width:fit-content;font-family:var(--font-mono);font-size:.8125rem;padding:3px 9px;border-radius:999px;border:1px solid currentColor;cursor:copy}
+#cs2 .bolt:not(.on) .tag{writing-mode:vertical-rl;transform:rotate(180deg)}
+@media(max-width:760px){#cs2 .bolts{flex-direction:column;height:auto}#cs2 .bolt{flex:none;min-height:64px}#cs2 .bolt.on{min-height:190px}#cs2 .bolt:not(.on) .tag{writing-mode:horizontal-tb;transform:none}}
+#cs2 .types{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+#cs2 .ty{display:grid;gap:8px;padding:24px;border:1px solid var(--line-strong);border-radius:var(--r-lg);background:var(--card)}
+#cs2 .ty-n{font-size:clamp(2.25rem,5vw,3.5rem);line-height:1}
+#cs2 .ty-u{font-size:.8125rem;color:var(--ink-faint)}
+#cs2 .ty-s{font-size:1.125rem;color:var(--ink)}
+@media(max-width:900px){#cs2 .types{grid-template-columns:1fr}}
+#cs2 .art{display:grid;grid-template-columns:minmax(220px,.7fr) 1.3fr;gap:clamp(24px,4vw,56px);align-items:center;margin-top:56px}
+#cs2 .art h3{margin:0 0 12px;font-size:clamp(1.5rem,2.6vw,2rem)}
+#cs2 .ticks{display:grid;gap:10px;margin-top:24px}
+#cs2 .ticks button{display:flex;align-items:center;gap:14px;padding:6px 0;font:inherit;font-weight:600;color:var(--ink-faint);background:transparent;border:0;cursor:pointer;text-align:left;transition:color .25s}
+#cs2 .ticks button[aria-pressed="true"]{color:var(--ink)}
+#cs2 .ticks i{position:relative;flex:none;width:56px;height:3px;border-radius:3px;background:var(--line-strong);overflow:hidden}
+#cs2 .ticks i b{position:absolute;inset:0;background:var(--accent-btn);transform:scaleX(0);transform-origin:left;transition:transform .6s cubic-bezier(.22,1,.36,1)}
+#cs2 .ticks button[aria-pressed="true"] i b{transform:scaleX(1)}
+#cs2 .slider{position:relative;aspect-ratio:16/10;overflow:hidden;border:1.5px solid var(--line-strong);border-radius:var(--r-lg);background:var(--card)}
+#cs2 .slider img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transform:scale(1.02);transition:opacity .6s ease,transform .8s cubic-bezier(.22,1,.36,1)}
+#cs2 .slider img.on{opacity:1;transform:none}
+@media(max-width:760px){#cs2 .art{grid-template-columns:1fr}}
+
+/* ---------- testing ---------- */
+#cs2 .tst{display:grid;grid-template-columns:minmax(240px,.8fr) 1.6fr;gap:clamp(20px,3vw,40px);align-items:start;margin:36px 0}
+#cs2 .tst-list{display:grid;gap:12px;margin:0;padding:0;list-style:none}
+#cs2 .tst-row{display:grid;gap:6px;width:100%;padding:16px 18px;text-align:left;font:inherit;color:inherit;cursor:pointer;border:1px solid var(--line-strong);border-radius:var(--r-lg);background:var(--card);transition:border-color .25s,background .25s}
+#cs2 .tst-row b{font-family:var(--font-display);font-size:1.0625rem}
+#cs2 .tst-row span{font-size:.9375rem;line-height:1.55;color:var(--ink-soft)}
+#cs2 .tst-row[aria-pressed="true"]{border-color:var(--accent-btn);background:color-mix(in srgb,var(--accent-btn) 7%,var(--card))}
+#cs2 .tst-shots{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+#cs2 .tst-shots figure{margin:0;display:flex;flex-direction:column;gap:12px;padding:12px;border:1px solid var(--line-strong);border-radius:var(--r-lg);background:var(--card)}
+#cs2 .tst-shots .tag{align-self:flex-start;padding:3px 12px;border-radius:999px;border:1px solid var(--line-strong);font-size:.75rem;font-weight:700}
+#cs2 .tst-shots .is-after .tag{background:var(--accent-btn);border-color:var(--accent-btn);color:#fff}
+#cs2 .tst-img{position:relative;overflow:hidden;border-radius:calc(var(--r-lg) - 6px);aspect-ratio:4/3}
+#cs2 .tst-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:filter .5s ease}
+#cs2 .tst-img .tst-fx{opacity:0;transition:opacity .5s ease}
+#cs2 .tst-img.spot>img:not(.tst-fx){filter:blur(4px) brightness(.78)}
+#cs2 .tst-img.spot .tst-fx{opacity:1}
+#cs2 .tst-img.dim>img{filter:brightness(.9) saturate(.8)}
+#cs2 .tst-pin{position:absolute;border:2px solid var(--accent-btn);border-radius:10px;opacity:0;transform:scale(1.25);transition:opacity .4s ease,transform .5s cubic-bezier(.34,1.4,.64,1);pointer-events:none}
+#cs2 .tst-img.spot .tst-pin{opacity:1;transform:none}
+@media(max-width:900px){#cs2 .tst{grid-template-columns:1fr}}
+@media(max-width:560px){#cs2 .tst-shots{grid-template-columns:1fr}}
+
+/* ---------- prototype ---------- */
+#cs2 .st-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:28px 0 14px}
+#cs2 .tst-tab{padding:9px 18px;font:inherit;font-size:.9375rem;font-weight:600;color:var(--ink-soft);background:transparent;border:1px solid var(--line-strong);border-radius:999px;cursor:pointer;transition:background .25s,color .25s,border-color .25s}
+#cs2 .tst-tab[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+#cs2 .st-panels{min-height:3.4em;max-width:62ch;margin-bottom:24px}
+#cs2 .st-p p{animation:openIn .45s ease}
+#cs2 .proto{position:relative;overflow:hidden;min-height:min(80vh,760px);border:1.5px solid var(--line-strong);border-radius:calc(var(--r-lg) + 4px);background:var(--card)}
+#cs2 .proto iframe{display:block;width:100%;height:min(80vh,760px);border:0}
+#cs2 .proto-fallback{display:grid;place-items:center;gap:16px;min-height:min(60vh,520px);padding:32px;text-align:center}
+#cs2 .proto-fallback p{margin:0;color:var(--ink-soft)}
+#cs2 .proto-fallback a{color:#fff;text-decoration:none}
+
+/* ---------- validation ---------- */
+#cs2 .vr-list{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:0;padding:0;list-style:none}
+#cs2 .vr-list>li{padding:22px 24px;border:1px solid var(--line-strong);border-radius:var(--r-lg);background:var(--card)}
+#cs2 .vr-list b{display:block;margin-bottom:8px;font-family:var(--font-display);font-size:1.1875rem}
+#cs2 .vr-list p{margin:0;font-size:.9375rem}
+#cs2 .nx-cap{margin-top:64px}
+#cs2 .nx-list{margin-block:20px}
+@media(max-width:760px){#cs2 .vr-list{grid-template-columns:1fr}}
+
+/* ---------- footer additions ---------- */
+.sf-clock{display:inline-flex;align-items:center;gap:8px;margin-left:16px;font-size:.875rem;color:var(--ink-soft)}
+.sf-dot{width:8px;height:8px;border-radius:50%;background:#2E9E5B}
+.sf-top{display:inline-grid;margin-right:20px;font-weight:600;color:var(--ink);text-decoration:none}
+.sf-top>span{grid-area:1/1;transition:opacity .25s,transform .35s cubic-bezier(.22,1,.36,1)}
+.sf-b{opacity:0;transform:translateY(8px)}
+.sf-top:hover .sf-a,.sf-top:focus-visible .sf-a{opacity:0;transform:translateY(-8px)}
+.sf-top:hover .sf-b,.sf-top:focus-visible .sf-b{opacity:1;transform:none}
+
+/* edge blur (slow-reveal_1.txt) */
+.edge-blur{position:fixed;left:0;right:0;z-index:4;height:calc(var(--edge,88px) + 2px);pointer-events:none;transition:opacity .3s ease}
+.edge-blur--top{top:-2px}.edge-blur--bottom{bottom:-2px;--edge:112px}
+.edge-blur>span{position:absolute;inset:0;-webkit-backdrop-filter:blur(var(--b));backdrop-filter:blur(var(--b));-webkit-mask-image:linear-gradient(var(--dir),transparent var(--s0),#000 var(--s1),#000 var(--s2),transparent var(--s3));mask-image:linear-gradient(var(--dir),transparent var(--s0),#000 var(--s1),#000 var(--s2),transparent var(--s3))}
+.edge-blur::after{content:'';position:absolute;inset:0;background:linear-gradient(var(--dir),color-mix(in srgb,var(--paper) 0%,transparent) 0%,color-mix(in srgb,var(--paper) 55%,transparent) 100%)}
+.edge-blur--top{--dir:to top}.edge-blur--bottom{--dir:to bottom}
+.edge-blur.is-hidden{opacity:0}
+@media(max-width:760px){.edge-blur--top{--edge:56px}.edge-blur--bottom{--edge:72px}}
+html[data-a11y-contrast] .edge-blur,html[data-a11y-calm] .edge-blur{display:none}
+
+#cs2 .t-wrap>p,#cs2 .t-wrap>.lede-p,#cs2 .t-wrap>.case-pullquote{max-width:760px}
+#cs2 .t-wrap .tst{grid-template-columns:minmax(240px,.7fr) 1.8fr}
+
+
+/* ===== v3 additions ===== */
+/* chapters wrap their sections so the side nav tracks them */
+#cs2 .chapter{position:relative}
+#cs2 .src{font-size:.875rem!important;color:var(--ink-faint)!important}
+
+/* stat strips (results, challenge, impact) */
+#cs2 .stats{margin:36px 0 0}
+#cs2 .stats--3{grid-template-columns:repeat(3,1fr)}
+#cs2 .stats dd{font-family:var(--font-display)}
+@media(max-width:900px){#cs2 .stats--3{grid-template-columns:1fr}#cs2 .stats--3>div{border-left:0;padding-left:0;border-top:1px solid var(--line)}#cs2 .stats--3>div:first-child{border-top:0}}
+
+/* wide horizontal people chart: 100 people in four rows, filled left to right */
+#cs2 .crowd-band{margin:64px 0 0;padding:clamp(24px,3.4vw,44px);border:1px solid var(--line-strong);border-radius:calc(var(--r-lg) + 6px);background:var(--card)}
+#cs2 .cb-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 24px;margin-bottom:28px}
+#cs2 .cb-head b{font-size:clamp(2.25rem,5.4vw,4.5rem);line-height:1;color:var(--ink)}
+#cs2 .cb-head span{font-size:1.0625rem;color:var(--ink-soft)}
+#cs2 .cb-grid{display:grid;grid-template-rows:repeat(4,auto);grid-auto-flow:column;grid-auto-columns:1fr;gap:10px 6px}
+#cs2 .pp{position:relative;display:block;aspect-ratio:3/4;min-width:0}
+#cs2 .pp::before{content:'';position:absolute;left:30%;right:30%;top:2%;aspect-ratio:1;border-radius:50%;background:color-mix(in srgb,var(--ink) 13%,transparent);transition:background .45s ease}
+#cs2 .pp::after{content:'';position:absolute;left:8%;right:8%;bottom:2%;height:52%;border-radius:999px 999px 5px 5px;background:color-mix(in srgb,var(--ink) 13%,transparent);transition:background .45s ease}
+#cs2 .crowd-band.in .pp.on::before,#cs2 .crowd-band.in .pp.on::after,#cs2.rm .pp.on::before,#cs2.rm .pp.on::after{background:var(--accent-btn);transition-delay:calc(var(--c)*55ms)}
+#cs2 .cb-scale{position:relative;display:flex;justify-content:space-between;margin-top:22px;padding-top:12px;font-size:.75rem;color:var(--ink-faint)}
+#cs2 .cb-scale::before{content:'';position:absolute;left:0;right:0;top:0;height:3px;border-radius:3px;background:var(--line-strong)}
+#cs2 .cb-scale i{position:absolute;left:0;top:0;height:3px;width:0;border-radius:3px;background:var(--accent-btn);transition:width 1.6s cubic-bezier(.22,1,.36,1) .2s}
+#cs2 .crowd-band.in .cb-scale i,#cs2.rm .cb-scale i{width:78%}
+@media(max-width:760px){#cs2 .cb-grid{grid-template-rows:repeat(10,auto);gap:8px 6px}}
+
+/* how-might-we: full-bleed statement */
+#cs2 .dir{position:relative;margin-top:var(--sec);padding:clamp(80px,13vw,180px) 0;background:var(--ink);color:var(--paper);overflow:hidden}
+#cs2 .dir::before{content:'';position:absolute;right:-12%;top:-30%;width:62%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--accent-btn) 55%,transparent),transparent 68%);opacity:.55;pointer-events:none}
+#cs2 .dir .wrap{position:relative}
+#cs2 .dir-l{margin:0 0 clamp(18px,3vw,36px);font-size:.875rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:color-mix(in srgb,var(--paper) 62%,transparent)}
+#cs2 .dir-q{margin:0;max-width:none;font-size:clamp(2.5rem,8.2vw,7.5rem);line-height:1.02;font-weight:700;letter-spacing:-.03em;color:var(--paper);text-wrap:balance}
+#cs2 .dir-q em{font-style:normal;color:color-mix(in srgb,var(--accent-btn) 78%,var(--paper))}
+#cs2 .blk+.dir{margin-top:var(--sec)}
+@media(max-width:640px){#cs2 .dir-q{font-size:clamp(2rem,10.4vw,3rem);line-height:1.08}}
+
+/* personas: each card is followed by its own details, on every screen size */
+#cs2 .pers{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:36px 0 0;align-items:start}
+#cs2 .pers .pc-sam,#cs2 .pers .pc-james{grid-column:1;grid-row:1}
+#cs2 .pers .pc-zara,#cs2 .pers .pc-sarah{grid-column:2;grid-row:1}
+#cs2 .pers .pp-open{grid-column:1/-1;grid-row:2;margin-top:0}
+@media(max-width:760px){
+  #cs2 .pers{grid-template-columns:1fr;gap:16px}
+  #cs2 .pers .pc-sam,#cs2 .pers .pc-zara,#cs2 .pers .pc-james,#cs2 .pers .pc-sarah,#cs2 .pers .pp-open{grid-column:1;grid-row:auto}
+}
+
+/* design decisions */
+#cs2 .decision--wide{margin:56px 0 28px}
+#cs2 .decision--wide dl{grid-template-columns:1.6fr 1fr;gap:28px 40px}
+#cs2 .decision.rv{display:flex}
+@media(max-width:760px){#cs2 .decision--wide dl{grid-template-columns:1fr}}
+#cs2 .art{margin-top:28px;grid-template-columns:minmax(200px,.5fr) 2fr}
+#cs2 .ticks{margin-top:0}
+
+/* key takeaways */
+#cs2 .vr-list--3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:900px){#cs2 .vr-list--3{grid-template-columns:1fr}}
+
+/* the dark footer and the contact block sit above the fixed colour layer */
+body.case-page>section,body.case-page>footer{position:relative;z-index:1}
+.sf-clock{color:rgba(251,246,236,.72)}
+.sf-top{color:rgba(251,246,236,.72)}
+.sf-top:hover,.sf-top:focus-visible{color:var(--on-panel,#fbf6ec)}
+
+/* animation pause control: a small icon button in the corner of the screen */
+#cs2 .solution article{position:relative}
+#cs2 .gif-toggle{position:absolute;top:12px;right:12px;z-index:2;display:grid;place-items:center;width:34px;height:34px;min-height:0;margin:0;padding:0;border:1px solid var(--line-strong);border-radius:50%;background:color-mix(in srgb,var(--card) 90%,transparent);color:var(--ink);font-size:0;line-height:0;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:background .2s,transform .2s}
+#cs2 .gif-toggle:hover{background:var(--card);transform:scale(1.06)}
+#cs2 .gif-toggle::before{content:'';width:12px;height:14px;background:currentColor;-webkit-mask:linear-gradient(90deg,#000 0 36%,transparent 36% 64%,#000 64% 100%);mask:linear-gradient(90deg,#000 0 36%,transparent 36% 64%,#000 64% 100%);border-radius:1px}
+#cs2 .gif-toggle[aria-label^="Play"]::before{width:13px;height:14px;margin-left:2px;-webkit-mask:none;mask:none;background:currentColor;clip-path:polygon(0 0,100% 50%,0 100%);border-radius:0}
+#cs2 .gif-toggle:focus-visible{outline:3px solid var(--accent-btn);outline-offset:2px}
+
+/* persona details panel */
+#cs2 .pp-open{padding:clamp(22px,3vw,36px);border:1.5px solid var(--accent-btn);border-radius:var(--r-lg);background:var(--card);animation:openIn .45s cubic-bezier(.22,1,.36,1)}
+#cs2 .pp-open[hidden]{display:none}
+#cs2 .pp-open blockquote{margin:0 0 14px;font-family:var(--font-display);font-size:clamp(1.25rem,2.4vw,1.75rem);line-height:1.3;color:var(--ink)}
+#cs2 .pp-open p{margin:0}
+
+/* paused animation: show only the frozen frame, framed like the live image */
+#cs2 img.gif-hidden{display:none!important}
+#cs2 .solution canvas{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:contain;padding:16px 16px 0;background:var(--paper)}
+
+/* keep the footer links clear of the floating accessibility button */
+body.case-page footer .container{padding-right:88px}
+@media(max-width:700px){body.case-page footer .container{padding-right:20px;padding-bottom:56px}}
+
+</style><style id="page-css">
+#cs2 .st-p[hidden]{display:none}
+#cs2 .evid{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;margin:32px 0 0}
+#cs2 .evid>div{padding:clamp(20px,3vw,32px);border:1px solid var(--line-strong);border-radius:var(--r-lg);background:var(--card)}
+#cs2 .evid .is-no{border-style:dashed;background:transparent}
+#cs2 .evid h3{margin:0 0 14px;font-family:var(--font-display);font-size:1.25rem}
+#cs2 .evid ul{margin:0;padding-left:1.1em;list-style:disc;display:grid;gap:12px;font-size:.9375rem;line-height:1.6;color:var(--ink-soft)}
+#cs2 .evid li strong{color:var(--ink)}
+#cs2 .decisions--3{grid-template-columns:repeat(3,1fr)}
+#cs2 .decisions--3 h3{font-size:1.25rem}
+#cs2 .flag{margin:28px 0 0;padding:18px 22px;border:1.5px solid var(--accent-btn);border-radius:var(--r-lg);background:var(--card);font-size:.9375rem;line-height:1.6;color:var(--ink-soft)}
+#cs2 .flag strong{color:var(--ink)}
+#cs2 .lead-d{margin:0 0 24px;max-width:24ch;font-size:clamp(1.5rem,3.2vw,2.5rem);line-height:1.15;color:var(--ink)}
+#cs2 .sl-nav{display:flex;gap:10px;margin-top:22px}
+#cs2 .sl-nav button{width:44px;height:44px;border:1px solid var(--line-strong);border-radius:50%;background:transparent;color:var(--ink);font:inherit;font-size:1.125rem;cursor:pointer;transition:background .2s}
+#cs2 .sl-nav button:hover{background:var(--card)}
+#cs2 .sl-hint{display:none;margin:12px 0 0;font-size:.8125rem;color:var(--ink-faint)}
+@media(pointer:coarse){#cs2 .sl-hint{display:block}}
+#cs2 .slider,#cs2 .st-panels[data-swipe]{touch-action:pan-y;cursor:grab}
+#cs2 .slider:focus-visible{outline:3px solid var(--accent-btn);outline-offset:3px}
+#cs2 .slider img.on{translate:var(--drag,0) 0}
+#cs2 .dragging{cursor:grabbing;user-select:none}
+#cs2 .slider img{-webkit-user-drag:none;user-select:none}
+#cs2 .dir-p{max-width:62ch;margin:clamp(20px,3vw,36px) 0 0;font-size:1.0625rem;line-height:1.7;color:color-mix(in srgb,var(--paper) 78%,transparent)}
+#cs2 .blk .dir-p{color:inherit}
+#cs2 .dirs{display:grid;grid-template-columns:repeat(2,1fr);gap:24px 48px;margin:clamp(36px,5vw,64px) 0 0;padding:0;list-style:none}
+#cs2 .dirs li{padding-top:18px;border-top:1px solid color-mix(in srgb,var(--paper) 30%,transparent)}
+#cs2 .dirs b{display:block;margin-bottom:6px;font-family:var(--font-display);font-size:1.25rem;color:var(--paper)}
+#cs2 .dirs span{font-size:.9375rem;line-height:1.6;color:color-mix(in srgb,var(--paper) 76%,transparent)}
+#cs2 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0;padding:0;list-style:none}
+#cs2 .chips li{padding:7px 14px;border:1px solid var(--line-strong);border-radius:999px;font-size:.875rem;color:var(--ink-soft)}
+#cs2 .chips li.is-key{background:var(--accent-btn);border-color:var(--accent-btn);color:var(--paper);font-weight:600}
+#cs2 .life{display:flex;align-items:center;margin:18px 0 0}
+#cs2 .life span{padding:7px 16px;border:1px solid var(--line-strong);border-radius:999px;font-size:.875rem;font-weight:600;color:var(--ink)}
+#cs2 .life span:last-child{background:var(--accent-btn);border-color:var(--accent-btn);color:var(--paper)}
+#cs2 .life i{flex:1;min-width:36px;border-top:1.5px dashed var(--line-strong)}
+#cs2 .srow ul:not(.chips){margin:14px 0 0;padding-left:1.1em;list-style:disc;display:grid;gap:8px;font-size:1rem;line-height:1.6;color:var(--ink-soft)}
+#cs2 .srow .cost{margin-top:14px;font-size:.9375rem;color:var(--ink-faint)}
+#cs2 .vr-list li ul{margin:10px 0 0;padding-left:1.1em;list-style:disc;display:grid;gap:6px;font-size:.9375rem;line-height:1.55;color:var(--ink-soft)}
+#cs2 .vr-list--2{grid-template-columns:1fr 1fr}
+#cs2 .vr-list .tag{display:inline-block;margin-bottom:10px;padding:2px 10px;border-radius:999px;background:var(--accent-btn);color:var(--paper);font-size:.6875rem;font-weight:700}
+#cs2 .sol-c .tag2{align-self:flex-start;margin-top:4px;padding:2px 10px;border:1px solid var(--line-strong);border-radius:999px;font-size:.6875rem;font-weight:700;color:var(--ink-faint)}
+#cs2 .solution img{object-fit:contain}
+#cs2 .dec-note{margin:0;font-size:.875rem;color:var(--ink-faint)}
+@media(max-width:900px){#cs2 .decisions--3{grid-template-columns:1fr}#cs2 .evid{grid-template-columns:1fr}}
+@media(max-width:700px){#cs2 .dirs,#cs2 .vr-list--2{grid-template-columns:1fr}}
+
+/* --- alignment / specificity fixes --- */
+/* --ink-faint on the sand section tint is 3.8:1 in light mode (needs 4.5:1 for small text); darken slightly here only */
+html[data-theme="light"] #cs2{--ink-faint:#6C604D}
+/* "#cs2 .blk p" (1,1,1) was beating single-class component rules (1,1,0); restore their intended sizing */
+#cs2 .blk p.kick{font-size:.875rem;line-height:1.5;color:var(--accent-btn)}
+#cs2 .blk p.lead-d{font-size:clamp(1.5rem,3.2vw,2.5rem);line-height:1.15;color:var(--ink)}
+#cs2 .blk p.persq{font-size:clamp(1.25rem,2.4vw,1.75rem);line-height:1.3;color:var(--ink)}
+#cs2 .blk p.options-label{font-size:.8125rem;line-height:1.4;color:var(--ink-faint)}
+#cs2 .blk p.dec-note{font-size:.875rem;line-height:1.5;color:var(--ink-faint)}
+#cs2 .blk p.flag{font-size:.9375rem;line-height:1.6}
+#cs2 .blk p.sl-hint{font-size:.8125rem;line-height:1.5;color:var(--ink-faint)}
+#cs2 .blk .flag+.flag{margin-top:16px}
+/* alternate rows: swap the column widths with the image so the image keeps the same width on every row */
+#cs2 .srow:nth-child(even){grid-template-columns:1fr 1.1fr}
+@media(max-width:760px){#cs2 .srow,#cs2 .srow:nth-child(even){grid-template-columns:1fr}#cs2 .srow:nth-child(even) figure{order:0}}
+#cs2 .sol-c .tag2{margin-top:auto}
+#cs2 .sol-c .body p{margin-bottom:8px}
+</style><style id="ad-css">
+/* Autodesk: blueprint variant. Cobalt accent, square corners, drawing grid, title-block facts */
+#cs2{--accent-btn:#2A55D6;--r-lg:8px}
+html[data-theme="dark"] #cs2{--accent-btn:#8FADFF}
+#cs2 .sheet{clip-path:inset(0 round 8px 8px 0 0);background-image:linear-gradient(color-mix(in srgb,var(--ink) 6%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--ink) 6%,transparent) 1px,transparent 1px);background-size:44px 44px}
+html[data-a11y-calm] #cs2 .sheet,html[data-a11y-contrast] #cs2 .sheet{background-image:none}
+#cs2 .sheet .wrap{align-items:flex-start;text-align:left}
+#cs2 .sheet-sum{max-width:56ch}
+#cs2 .sheet h1{font-size:clamp(3rem,9vw,7.5rem)}
+#cs2 .card{border-radius:6px;padding:0;overflow:hidden}
+#cs2 .facts{grid-template-columns:repeat(3,1fr);gap:0}
+#cs2 .facts>div{padding:18px 20px;border-left:1px solid var(--line-strong);border-top:1px solid var(--line-strong)}
+#cs2 .facts>div:nth-child(-n+3){border-top:0}
+#cs2 .facts>div:nth-child(3n+1){border-left:0}
+#cs2 .facts dt{font-family:var(--font-mono,ui-monospace,Menlo,monospace);font-size:.6875rem}
+@media(max-width:900px){#cs2 .facts{grid-template-columns:1fr 1fr}#cs2 .facts>div:nth-child(n){border-top:1px solid var(--line-strong);border-left:1px solid var(--line-strong)}#cs2 .facts>div:nth-child(-n+2){border-top:0}#cs2 .facts>div:nth-child(2n+1){border-left:0}}
+@media(max-width:560px){#cs2 .facts{grid-template-columns:1fr}#cs2 .facts>div:nth-child(n){border-left:0}#cs2 .facts>div:nth-child(n+2){border-top:1px solid var(--line-strong)}}
+#cs2 .goals{grid-template-columns:repeat(3,1fr)}
+#cs2 .goals b{font-size:2.25rem;line-height:1}
+#cs2 .fun{display:grid;gap:10px;margin:32px 0 0}
+#cs2 .fun-r{display:grid;grid-template-columns:minmax(110px,190px) 1fr;gap:6px 18px;align-items:center}
+#cs2 .fun-n{font-family:var(--font-display);font-size:clamp(1.5rem,3vw,2.25rem);font-weight:700;line-height:1;color:var(--ink)}
+#cs2 .fun-b{display:flex;align-items:center;gap:14px;min-width:0}
+#cs2 .fun-b i{flex:none;display:block;width:calc(var(--w)*.62);height:40px;border-radius:5px;background:color-mix(in srgb,var(--accent-btn) var(--m,100%),var(--line));transform:scaleX(0);transform-origin:left;transition:transform 1.1s cubic-bezier(.22,1,.36,1) calc(var(--k)*140ms)}
+#cs2 .fun.in .fun-b i,#cs2.rm .fun-b i{transform:none}
+#cs2 .fun-b span{font-size:.9375rem;line-height:1.4;color:var(--ink-soft)}
+@media(max-width:640px){#cs2 .fun-r{grid-template-columns:1fr}#cs2 .fun-b{flex-wrap:wrap}}
+</style>
+</head>
+<body class="case-page" id="top">
+<a href="#main" class="skip-link">Skip to content</a>
+<!-- ── NAVBAR ── -->
+<header class="site-header">
+  <a class="brand" href="../index.html" aria-label="Piyush home"><svg class="logo" viewBox="0 0 36 36" width="36" height="36" aria-hidden="true"><rect x="1" y="1" width="34" height="34" rx="11" fill="currentColor"/><path d="M13.5 26V10h6a5 5 0 010 10h-6" fill="none" stroke="var(--paper)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Piyush</span></a>
+  <nav aria-label="Main navigation">
+    <a href="../index.html#work">Work</a>
+    <a href="../index.html#contact">Contact</a>
+  </nav>
+  <div class="header-actions">
+    <button type="button" class="icon-button theme-toggle" id="theme-toggle" aria-label="Switch to dark theme" title="Switch to dark theme"><span class="theme-sky" aria-hidden="true"><span class="theme-sun"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></span><span class="theme-moon"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></span></span></button>
+    <button class="icon-button menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" title="Open navigation"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button>
+  </div>
+</header>
+<nav id="side-stepper" aria-label="Case study sections"><button type="button" class="stepper-item" data-section="overview"><span class="stepper-label">Overview</span><span class="stepper-dot" aria-hidden="true"></span></button><button type="button" class="stepper-item" data-section="challenge"><span class="stepper-label">Challenge</span><span class="stepper-dot" aria-hidden="true"></span></button><button type="button" class="stepper-item" data-section="approach"><span class="stepper-label">Approach</span><span class="stepper-dot" aria-hidden="true"></span></button><button type="button" class="stepper-item" data-section="solution"><span class="stepper-label">Solution</span><span class="stepper-dot" aria-hidden="true"></span></button><button type="button" class="stepper-item" data-section="impact"><span class="stepper-label">Impact</span><span class="stepper-dot" aria-hidden="true"></span></button></nav>
+<div id="cs2" data-theme="paper">
+<div class="bg" aria-hidden="true"></div>
+<main id="main" tabindex="-1" class="cs-main">
+<div id="overview" class="chapter">
+<section class="intro" data-theme="paper"><div class="h-pin" aria-hidden="true"><img src="../images/case-studies/autodesk/ad_bg.avif" width="2450" height="1164" alt="" fetchpriority="high"><div class="h-shade"></div></div><div class="sheet" data-r="8"><div class="wrap"><p class="kick">Case study · 7 min read</p><h1 class="disp">Autodesk ACC</h1><p class="sheet-sum">An industry project with Autodesk, run as a 6-week Agile sprint within the MSc UX industry module.</p><div class="card" id="facts-card"><dl class="facts"><div style="--k:0"><dt>Client</dt><dd>Autodesk ACC</dd></div><div style="--k:1"><dt>Project</dt><dd>Industry project<small>MSc UX · University of Lancashire</small></dd></div><div style="--k:2"><dt>Timeline</dt><dd>6-week sprint<small>Agile Scrum</small></dd></div><div style="--k:3"><dt>My role</dt><dd>Team lead<small>Team of four</small></dd></div><div style="--k:4"><dt>Methods</dt><dd>Heuristic evaluation · Thematic analysis · Prototyping</dd></div><div style="--k:5"><dt>Status</dt><dd>Not yet tested with end users<small>An exploration backed by research</small></dd></div></dl></div></div></div></section>
+<section class="brief" id="brief" data-theme="paper"><div class="stage wrap"><p class="kick">Overview</p><p class="statement disp" id="statement">I led a team of four to narrow 25,000+ public comments into one clear problem statement for Autodesk Construction Cloud, in a technical domain that was new to us.</p><ul class="goals" id="goals" aria-label="At a glance"><li style="--k:0"><b>25K+</b><span>public comments collected from Autodesk forums, social media, YouTube and Reddit</span></li><li style="--k:1"><b>160</b><span>actionable insights after AI-assisted and manual (Excel) filtering</span></li><li style="--k:2"><b>5</b><span>themes across the dataset, two of them dominant: Workflow Challenges and Visibility Gaps</span></li></ul></div></section>
+<section class="blk" data-theme="sand"><div class="wrap"><p class="kick">My role</p><h2 class="sec-h disp rv">Leading a team of four</h2><div class="prose rv"><p>The problem space was new to us: large-scale construction coordination with BIM software. We worked from a live brief to define scope, then designed a workflow for two analyses that users need together but the product keeps apart.</p></div><ul class="vr-list vr-list--2 rv"><li><b>What leading involved</b><ul><li>Ran the sprint using Scrum: a task list for each team member, stand-ups, and working sessions together.</li><li>Led team calls with seniors and stakeholders, made sure everyone spoke in meetings and presentations, and prepared the presentation.</li></ul></li><li><b>What I did hands-on</b><ul><li>Thematic analysis, and analysis of the interview excerpts.</li><li>Brainstormed and framed the final problem statement and how-might-we questions.</li><li>Pitched wireframing ideas and the two core ideas: a timeline and predictive forecasting.</li></ul></li></ul><p class="flag rv"><strong>This was an industry project with Autodesk.</strong> In line with the University of Lancashire’s dissemination guidance, materials supplied by Autodesk, the findings from stakeholder and customer interviews, and product-specific detail aren’t shared here. This page covers the problem, the methods, my role and the outcome, using generalised content only.</p><p class="flag rv"><strong>Not yet tested with end users.</strong> The prototype is an exploration backed by research.</p></div></section>
+<section class="blk" data-theme="paper" style="padding-bottom:0"><div class="wrap"><p class="kick">Skills</p><h2 class="sec-h disp rv">Skills this case study shows</h2><ul class="vr-list vr-list--2 rv"><li><b>Turning a large, noisy dataset into a clear problem (strongest).</b><p>In an unfamiliar technical domain within a six-week sprint.</p></li><li><b>Leading a team of four on a live brief.</b><p>Sprint rhythm, stakeholder calls and a shared presentation.</p></li><li><b>Working within confidentiality rules.</b><p>The dissemination guidance shaped what this page can show.</p></li><li><b>Structuring the problem.</b><p>Impact × frequency prioritisation and MoSCoW requirements.</p></li></ul></div></section>
+</div>
+<div id="challenge" class="chapter">
+<section class="blk" data-theme="sand" style="padding-bottom:var(--sec)"><div class="wrap"><p class="kick">Challenge</p><h2 class="sec-h disp rv">The Challenge</h2><div class="prose rv"><p>Autodesk Construction Cloud has Change Analysis and Clash Analysis, both critical to BIM workflows. They sit in entirely different parts of the platform, yet in users’ real work they are closely related.</p></div><div class="decisions cmp-wide"><article class="decision rv"><span class="num">Change Analysis</span><h3>What was added, removed or modified</h3><dl><div><dt>What</dt><dd>Tracks changes to 3D building model objects across versions: what moved, who moved it and when.</dd></div></dl></article><article class="decision rv"><span class="num">Clash Analysis</span><h3>Where objects overlap in space</h3><dl><div><dt>What</dt><dd>Identifies when model objects physically overlap, a conflict that must be resolved before a building can be constructed.</dd></div></dl></article></div><div class="case-pullquote rv"><p><strong>What users want.</strong> When a clash is found, they want to trace it back to the change that introduced it. Resolving it means changing one or both objects, so the brief asked whether those changes could be suggested, or recorded against the clash as history.</p></div></div></section>
+</div>
+<div id="approach" class="chapter">
+<section class="blk" data-theme="paper"><div class="wrap"><p class="kick">Approach</p><h2 class="sec-h disp rv">My Approach</h2><div class="prose rv"><p>Three phases across the 6-week sprint: Discovery, Ideation, Evaluation. Autodesk supplied background data, insights, personas and excerpts from stakeholder and customer interviews (not shared here). We added public data, a heuristic evaluation and benchmarking, and analysed the interview excerpts.</p></div><h3 class="cap first">How the evidence narrowed</h3><div class="fun rv" role="img" aria-label="How the evidence narrowed: 25,000+ comments, then 160 actionable insights, then 5 themes, then 2 dominant themes, then one problem statement and four how-might-we directions"><div class="fun-r" aria-hidden="true"><span class="fun-n">25,000+</span><span class="fun-b"><i style="--w:100%;--k:0;--m:100%"></i><span>comments</span></span></div><div class="fun-r" aria-hidden="true"><span class="fun-n">160</span><span class="fun-b"><i style="--w:34%;--k:1;--m:85%"></i><span>actionable insights</span></span></div><div class="fun-r" aria-hidden="true"><span class="fun-n">5</span><span class="fun-b"><i style="--w:20%;--k:2;--m:70%"></i><span>themes</span></span></div><div class="fun-r" aria-hidden="true"><span class="fun-n">2</span><span class="fun-b"><i style="--w:12%;--k:3;--m:55%"></i><span>dominant themes: Workflow Challenges and Visibility Gaps</span></span></div><div class="fun-r" aria-hidden="true"><span class="fun-n">1</span><span class="fun-b"><i style="--w:8%;--k:4;--m:40%"></i><span>problem statement and four how-might-we directions</span></span></div></div><div class="srows"><article class="srow rv"><figure><img src="../images/case-studies/autodesk/ad_r1.avif" width="900" height="700" loading="lazy" decoding="async" alt="Heuristic evaluation and content analysis"></figure><div><span class="srow-n">01</span><h3 class="disp">Heuristic evaluation and large-scale content analysis</h3><p>We ran a heuristic evaluation of the platform’s workflows against Nielsen’s 10 heuristics. Alongside it, we collected 25,000+ public comments about ACC, Clash and Change Analysis, model coordination, design collaboration and Navisworks.</p><ul><li>AI sped up the first pass by helping us decide which comments were worth coding, but it made mistakes when identifying codes, so the team reviewed and aligned every code by hand. We then filtered manually in Excel, ending with 160 actionable insights. Codes and themes were defined by the team, using thematic and sentiment analysis.</li><li>Key finding from the heuristic evaluation: <strong>an inconsistent UI and limited feedback make it hard to connect model changes with clashes, track them over time, and move between workflows.</strong> It was also unclear who made a change, where it came from and who should resolve the issue.</li></ul></div></article><article class="srow rv"><figure><img src="../images/case-studies/autodesk/ad_r2.avif" width="900" height="700" loading="lazy" decoding="async" alt="Thematic analysis"></figure><div><span class="srow-n">02</span><h3 class="disp">Thematic analysis: five themes, two dominant</h3><p>Codes were grouped into five overarching themes, and two became the focus.</p><ul class="chips" aria-label="Five themes"><li>Positives</li><li>Pain Points and Frustrations</li><li>Manual Workarounds</li><li class="is-key">Workflow Challenges</li><li class="is-key">Visibility Gaps</li></ul></div></article><article class="srow rv"><figure><img src="../images/case-studies/autodesk/ad_r3.avif" width="900" height="700" loading="lazy" decoding="async" alt="Competitive analysis"></figure><div><span class="srow-n">03</span><h3 class="disp">Benchmark analysis and analogous inspiration</h3><p>We benchmarked platforms directly and indirectly related to the problem space to find best practice and limitations. One example stood out: Navisworks tracks clashes through a clear status lifecycle, from New through to Resolved. That gives teams a shared view of what has been dealt with and what still needs attention. Analogous inspiration surfaced useful patterns from outside the BIM field.</p><div class="life" role="img" aria-label="Status lifecycle from New through to Resolved"><span>New</span><i></i><span>Resolved</span></div></div></article></div><div class="case-pullquote rv" style="margin-top:64px"><p>The research pointed to <em>a fragmented coordination ecosystem</em>: no data continuity between detecting a clash and tracking the issue, and high cognitive load from moving across multiple tools.</p></div></div></section>
+<section class="dir" data-theme="sand" aria-labelledby="hmw-l hmw"><div class="wrap"><p class="dir-l" id="hmw-l">Problem statement</p><h2 class="dir-q disp rv" id="hmw">Users face a critical visibility gap. <em>There is no functional bridge between “what changed” and “what broke”.</em></h2><p class="dir-p">Teams can’t establish what caused a new issue, so they reconcile manually, which raises the risk of oversight, weakens collaborative reviews and obscures the audit trail behind decisions.</p><p class="dir-p"><strong>From research to direction.</strong> HMW questions came out of the thematic analysis, were prioritised on an impact × frequency matrix, then formalised into a MoSCoW requirements set.</p><ul class="dirs" aria-label="Four directions we worked from"><li><b>Connect clash to change</b><span>HMW trace a detected clash back to the specific change that introduced it, in one workflow rather than two tools?</span></li><li><b>Reduce cognitive overhead</b><span>HMW reduce the effort of navigating large volumes of clash data without enough contextual control?</span></li><li><b>Proactive over reactive</b><span>HMW move teams from discovering clashes after they occur to anticipating them?</span></li><li><b>Create an audit trail</b><span>HMW record how clashes were resolved and surface that history when similar conflicts arise in later model iterations?</span></li></ul></div></section>
+<section class="blk" data-theme="paper" style="padding-bottom:var(--sec)"><div class="wrap"><p class="kick">Direction</p><h2 class="sec-h disp rv">From flow to wireframes</h2><div class="art rv" data-slider><div><div class="ticks" role="group" aria-label="Flowchart and wireframes"><button type="button" aria-pressed="true"><i><b></b></i><span>Flowchart</span></button><button type="button" aria-pressed="false"><i><b></b></i><span>Wireframes</span></button></div><div class="sl-nav"><button type="button" class="sl-prev" aria-label="Previous image">←</button><button type="button" class="sl-next" aria-label="Next image">→</button></div><p class="sl-hint">Swipe the image, or use the arrows</p></div><div class="slider" role="group" aria-label="Flowchart and wireframes, use left and right arrow keys"><img class="on" src="../images/case-studies/autodesk/ad_flow.avif" width="1600" height="700" loading="lazy" alt="Flowchart"><img src="../images/case-studies/autodesk/ad_wireframe.avif" width="1600" height="900" loading="lazy" alt="Wireframes"></div></div></div></section>
+</div>
+<div id="solution" class="chapter">
+<section class="blk" data-theme="sand" style="padding-bottom:var(--sec)"><div class="wrap"><p class="kick">Solution</p><h2 class="sec-h disp rv">The Solution</h2><div class="prose rv"><p>We built the prototype through iterative wireframing in the Ideation and Evaluation phases, using the problem statement, the personas and the interview insights. It has two contributions.</p></div><div class="solution cmp-wide"><article class="sol-c"><img src="../images/case-studies/autodesk/ad_sol1.avif" width="1600" height="900" loading="lazy" alt="Object-based solution"><div class="body"><span class="step">01</span><h3>An object and filter-based approach to clash and change analysis</h3><p>The core friction was cognitive overhead: dense lists of clashes with little contextual control. The prototype introduced an object and filter-based interaction model so users can isolate, group and prioritise clashes by parameters such as discipline, severity or model element type, giving them more control over what they review and cutting the noise in clash review sessions.</p><span class="tag2">Not tested with end users</span></div></article><article class="sol-c"><img src="../images/case-studies/autodesk/ad_sol2.avif" width="1600" height="900" loading="lazy" alt="Predictive forecasting solution"><div class="body"><span class="step">02</span><h3>Predictive clash forecasting</h3><p>The second contribution moves teams from reactive to proactive. Rather than only surfacing clashes after they occur, the prototype explored a forecasting model that could signal likely conflict zones from patterns in model changes over time. The research showed late discovery of clashes causes delays and rework. It didn’t show that prediction is possible, so this is an exploration, not a validated model.</p><span class="tag2">Exploration, not validated</span></div></article></div><article class="decision rv decision--wide cmp-wide"><span class="num">How the two connect</span><h3>Clash and change, in one trace</h3><dl><div><dt>What</dt><dd>The core issue was that clash and change analysis weren’t associated in the product. When one team’s change causes a clash for another team, the user should be able to see who made it. The filters show who made each change and when, so the user can contact the right team to fix it, and forecasting aims to flag likely conflicts before they happen so teams can avoid them. Together they’re designed to let a user trace from a clash back to its change, or from a change forward to the clashes it caused.</dd></div><div><dt>Status</dt><dd>This is design intent, not tested with end users.</dd></div></dl></article></div></section>
+</div>
+<div id="impact" class="chapter">
+<section class="blk" data-theme="paper"><div class="wrap"><p class="kick">Impact</p><h2 class="sec-h disp rv">Measurable Impact</h2><div class="prose rv"><p>There’s no measured impact yet. The prototype hasn’t been tested with end users, so this section sets out what the evidence supports and what it doesn’t.</p></div><div class="evid rv"><div><h3>What the evidence supports</h3><ul><li><strong>Problem direction:</strong> Workflow Challenges and Visibility Gaps were the two key themes across 25,000+ public comments from several sources.</li><li><strong>Benchmark pattern:</strong> Navisworks’ clash status lifecycle is an existing model, so the direction has precedent.</li><li><strong>Interview excerpts from Autodesk:</strong> Analysed to cross-reference the public data (findings not shared here).</li><li><strong>Developer feedback:</strong> A developer who had worked on the project previously gave formal, technical feedback on our ideas, and background to base them on. That’s expert input, not end-user testing.</li></ul></div><div class="is-no"><h3>What it doesn’t support yet</h3><ul><li><strong>End-user testing:</strong> Not conducted. Required before any deployment decision.</li></ul></div></div></div></section>
+<section class="blk" data-theme="sand"><div class="wrap"><p class="kick">Limits</p><h2 class="sec-h disp rv">What we can’t claim yet</h2><p class="lede-p rv">Three limitations, each with a next step.</p><div class="decisions decisions--3 cmp-wide"><article class="decision rv"><span class="num">Limitation 01</span><h3>Data collection scope</h3><dl><div><dt>Gap</dt><dd>Public datasets skew toward frustrated users. Power users, satisfied users and those who simply get on with the tool are largely invisible. Findings are directionally valid but need validating against a broader sample.</dd></div><div class="cost"><dt>Next step</dt><dd>Structured research with a representative cross-section of ACC users across disciplines and project types.</dd></div></dl></article><article class="decision rv"><span class="num">Limitation 02</span><h3>No end-user testing</h3><dl><div><dt>Gap</dt><dd>The prototype wasn’t tested with real BIM Managers or Engineers. Instead, a developer who had worked on the project previously reviewed it (see above). Given the domain complexity (high-stakes construction workflows), that’s a significant gap that stakeholder input can’t substitute for.</dd></div><div class="cost"><dt>Next step</dt><dd>A task-based usability study with BIM Managers and Engineers using the integrated prototype in a real project context.</dd></div></dl></article><article class="decision rv"><span class="num">Limitation 03</span><h3>Generalisability of platform findings</h3><dl><div><dt>Gap</dt><dd>Findings from the platform audit may not generalise beyond the specific workflows studied. ACC serves a wide range of construction disciplines with different coordination priorities.</dd></div><div class="cost"><dt>Next step</dt><dd>Validate the forecasting model against historical clash and change data from live ACC projects across multiple disciplines.</dd></div></dl></article></div><figure class="media cmp-wide rv"><img src="../images/case-studies/autodesk/ad_issue2.avif" width="1200" height="800" loading="lazy" alt="Paper prototyping snippet"></figure></div></section>
+<section class="blk" data-theme="paper"><div class="wrap"><p class="kick">Takeaways</p><h2 class="sec-h disp rv">Key takeaways: decisions and what they cost</h2><ul class="vr-list vr-list--3 rv"><li><b>AI to narrow, people to judge.</b><p>Reading 25,000+ comments line by line wasn’t feasible in six weeks. The AI-assisted first filter made it workable, but it made coding mistakes, so people made the final calls. The cost is that the first filter shaped what we saw.</p></li><li><b>Pushing past the brief.</b><p>The brief asked how to integrate two views. Forecasting was our attempt at a different mental model, proactive rather than reactive, and it stays an exploration.</p></li><li><b>A benchmark as a design anchor.</b><p>An existing clash status lifecycle gave us a pattern to learn from instead of designing resolution tracking from scratch.</p></li></ul></div></section>
+<section class="blk" data-theme="sand" style="padding-bottom:var(--sec)"><div class="wrap"><p class="kick">Unresolved</p><h2 class="sec-h disp rv">What’s unresolved</h2><div class="prose rv"><p><strong>Role-based view logic.</strong> BIM Managers, Engineers and Architects have different needs when reviewing clashes and changes. The prototype addressed integration, but the permission model and role-based views would need a further sprint.</p></div><div class="case-pullquote rv"><p>The brief asked for two levels of work: <em>workflow design</em> (when and where to show clash and change analysis, and to which users) and <em>UI design</em> (how the two sets of results interact in the interface). We worked on both.</p></div><div class="prose rv"><p><strong>Want to go deeper?</strong> The full story has more detail than fits here, including the methods and the decisions behind them. Get in touch for a walkthrough: <a href="mailto:work.piyushjadhav@gmail.com">Email Me (work.piyushjadhav@gmail.com)</a></p></div></div></section>
+</div>
+<section><div class="container"><div><div class="max-w-3xl mx-auto px-4 sm:px-7 case-more-wrap"><h2 class="eyebrow eyebrow--case mb-2">more case studies</h2><div class="case-more-list"><a href="culinarr.html" class="case-more-item"><div><div class="eyebrow">Product Design · Prototyping</div><h3>Culinarr</h3><p>Evidence-led product design: a QR group ordering prototype where research changed the plan and every decision states its cost.</p></div><img src="../images/case-studies/culinarr/01home.avif" width="1200" height="900" loading="lazy" decoding="async" alt="" /></a><a href="dwp.html" class="case-more-item"><div><div class="eyebrow">Service Design · UK Public Sector</div><h3>DWP Bereavement Redesign</h3><p>Research judgement under constraints: when interviews carried too much ethical risk, a switch to public-post analysis led to a three-layer service model.</p></div><img src="../images/case-studies/dwp/dwp_bg.avif" width="1200" height="900" loading="lazy" decoding="async" alt="" /></a></div></div></div></div></section>
+</main>
+</div>
+
+
+<section id="contact" aria-labelledby="contact-title">
+  <div class="container">
+    <div class="contact-card reveal">
+      <div class="contact-left">
+        <span class="eyebrow">open to opportunities</span>
+        <h2 class="section-title" id="contact-title">Let's talk design.</h2>
+        <p class="contact-sub">Open to roles in product design, service design, and UX — consumer, hospitality, and complex multi-user products.</p>
+      </div>
+      <div class="contact-actions">
+        <a href="mailto:work.piyushjadhav@gmail.com" class="btn-primary">Say hello<svg class="icn" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a href="../assets/Resume.pdf" target="_blank" rel="noopener" class="btn-ghost">View resume<span class="sr-only"> (opens in new tab)</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <span class="footer-left">© 2026 Piyush Jadhav. Designed &amp; built with ♥</span><span class="sf-clock" aria-live="off"><i class="sf-dot" aria-hidden="true"></i><span class="sf-clock-t"></span></span>
+      <div class="footer-links"><a class="sf-top" href="#top" aria-label="Back to top"><span class="sf-a">Back to top ↑</span><span class="sf-b" aria-hidden="true">Up we go ↑</span></a>
+        <a href="https://www.linkedin.com/in/piyushjadhavdesign/" target="_blank" rel="noopener">LinkedIn<span class="sr-only"> (opens in new tab)</span></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ── ACCESSIBILITY ── -->
+<div id="a11y-widget">
+  <section id="a11y-panel" aria-labelledby="a11y-title" hidden>
+    <h2 id="a11y-title">Accessibility</h2>
+    <button type="button" class="a11y-row a11y-row--preset" role="switch" aria-checked="false" id="a11y-preset"><span>Accessible view<small>One tap: larger text, high contrast, calm layout</small></span><span class="a11y-track" aria-hidden="true"></span></button>
+    <div class="a11y-section" role="group" aria-labelledby="a11y-text-head">
+      <p class="a11y-heading" id="a11y-text-head">Text</p>
+      <div class="a11y-group" role="group" aria-labelledby="a11y-size-label">
+        <span id="a11y-size-label">Text size</span>
+        <div class="a11y-sizes">
+        <button type="button" class="a11y-size" data-text="0" aria-pressed="true" aria-label="Default text size" style="font-size:.875rem">A</button>
+        <button type="button" class="a11y-size" data-text="1" aria-pressed="false" aria-label="Large text size" style="font-size:1.0625rem">A</button>
+        <button type="button" class="a11y-size" data-text="2" aria-pressed="false" aria-label="Extra large text size" style="font-size:1.3125rem">A</button>
+      </div>
+      </div>
+      <button type="button" class="a11y-row" role="switch" aria-checked="false" data-flag="font"><span>Readable font<small>Atkinson Hyperlegible</small></span><span class="a11y-track" aria-hidden="true"></span></button>
+      <button type="button" class="a11y-row" role="switch" aria-checked="false" data-flag="space"><span>Roomier text spacing</span><span class="a11y-track" aria-hidden="true"></span></button>
+      <button type="button" class="a11y-row" role="switch" aria-checked="false" data-flag="links"><span>Underline links</span><span class="a11y-track" aria-hidden="true"></span></button>
+    </div>
+    <div class="a11y-section" role="group" aria-labelledby="a11y-display-head">
+      <p class="a11y-heading" id="a11y-display-head">Display</p>
+      <button type="button" class="a11y-row" role="switch" aria-checked="false" data-flag="contrast"><span>High contrast</span><span class="a11y-track" aria-hidden="true"></span></button>
+      <button type="button" class="a11y-row" role="switch" aria-checked="false" data-flag="calm"><span>Calm layout<small>No motion, tilt or texture</small></span><span class="a11y-track" aria-hidden="true"></span></button>
+    </div>
+    <button type="button" class="a11y-reset" id="a11y-reset">Reset all</button>
+  </section>
+  <button type="button" id="a11y-fab" aria-expanded="false" aria-controls="a11y-panel" aria-label="Accessibility options">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="7.5" r="1.2" fill="currentColor" stroke="none"/><path d="M7 10.5l5 1 5-1M12 11.5v3.5M9.5 20l2.5-5 2.5 5"/></svg>
+  </button>
+</div>
+
+<script src="../js/site.js" defer></script>
+<script src="../js/case-study.js" defer></script>
+<script id="v2-js">
+(function () {
+  'use strict';
+  /* Set the embed address of the Figma prototype here (Figma → Share → Get embed code → copy the src="…" value).
+     While it is empty, the Prototype section shows a button that opens the prototype in a new tab. */
+  var FIGMA_EMBED_URL = '';
+
+  var root = document.documentElement;
+  var o2 = document.getElementById('cs2');
+  var $ = function (s, c) { return (c || document).querySelector(s); };
+  var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
+  var mqReduce = matchMedia('(prefers-reduced-motion: reduce)');
+  var reduce = false;
+  function wantsCalm() { return mqReduce.matches || root.hasAttribute('data-a11y-calm'); }
+  function syncMotion() {
+    reduce = wantsCalm();
+    o2.classList.toggle('rm', reduce);
+    root.classList.toggle('v2-rm', reduce);
+    if (reduce) { $$('.rv, .card, .crowd-band, .ia, .goals').forEach(function (e) { e.classList.add('in'); }); }
+    measure(); frame();
+  }
+
+  /* ---------- statement: split into words ---------- */
+  var stmt = $('#statement'), words = [];
+  if (stmt) {
+    var parts = stmt.textContent.trim().split(/\s+/);
+    stmt.textContent = '';
+    parts.forEach(function (w, i) {
+      var sp = document.createElement('span');
+      sp.className = 'w'; sp.textContent = w;
+      stmt.appendChild(sp); if (i < parts.length - 1) stmt.appendChild(document.createTextNode(' '));
+      words.push(sp);
+    });
+  }
+
+  /* ---------- measurements + frame loop ---------- */
+  var vh = innerHeight, intro = $('.intro'), sheet = $('.sheet', intro), pin = $('.h-pin img', intro), shade = $('.h-shade', intro), R0 = +(sheet && sheet.getAttribute('data-r') || 48);
+  var brief = $('#brief'), goals = $('#goals'), secs = $$('#cs2 main section[data-theme]');
+  var M = { briefTop: 0, briefH: 0, tops: [] };
+  function measure() {
+    vh = innerHeight;
+    var sy = scrollY;
+    M.briefTop = brief.getBoundingClientRect().top + sy;
+    M.briefH = brief.offsetHeight;
+    M.tops = secs.map(function (s) { return s.getBoundingClientRect().top + sy; });
+  }
+  var lastTheme = '', lastLit = -1, ticking = false;
+  function frame() {
+    ticking = false;
+    var y = scrollY;
+    /* cover: the photo drifts slower, softens and dims while the sheet rises over it */
+    if (sheet && !reduce) {
+      var top = sheet.getBoundingClientRect().top;
+      var p = Math.min(1, Math.max(0, 1 - top / vh));
+      var r = Math.round(R0 * (1 - Math.min(1, p * 1.15)));
+      sheet.style.clipPath = 'inset(0 round ' + r + 'px ' + r + 'px 0 0)';
+      pin.style.transform = 'translate3d(0,' + (-p * 6).toFixed(2) + '%,0) scale(' + (1 + p * 0.07).toFixed(3) + ')';
+      pin.style.filter = 'blur(' + (p * 10).toFixed(1) + 'px) brightness(' + (1 - p * 0.28).toFixed(3) + ')';
+      shade.style.opacity = (p * 0.55).toFixed(3);
+    } else if (sheet) {
+      sheet.style.clipPath = 'none'; pin.style.transform = ''; pin.style.filter = ''; shade.style.opacity = 0;
+    }
+    /* brief: light words in as the stage scrolls */
+    var prog = Math.min(1, Math.max(0, (y - M.briefTop) / Math.max(1, M.briefH - vh)));
+    var n = reduce ? words.length : Math.floor(Math.min(1, prog / 0.72) * words.length);
+    if (n !== lastLit) { words.forEach(function (w, i) { w.classList.toggle('lit', i < n); }); lastLit = n; }
+    if (goals) goals.classList.toggle('in', prog > 0.78 || reduce);
+    /* colour flow: the page tint follows the section in view */
+    var mid = y + vh * 0.5, theme = 'paper';
+    for (var i = 0; i < secs.length; i++) { if (M.tops[i] <= mid) theme = secs[i].getAttribute('data-theme') || 'paper'; }
+    if (theme !== lastTheme) { o2.setAttribute('data-theme', theme); lastTheme = theme; }
+  }
+  function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', function () { measure(); frame(); });
+  addEventListener('load', function () { measure(); frame(); });
+
+  /* ---------- reveal on view ---------- */
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
+  $$('.rv, .card, .crowd-band, .ia').forEach(function (e) { io.observe(e); });
+  $$('.ia-br > li').forEach(function (li, i) { li.style.setProperty('--k', i); });
+
+  /* ---------- personas: tap to open ---------- */
+  var pcs = $$('.pc');
+  pcs.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var open = b.getAttribute('aria-expanded') === 'true';
+      pcs.forEach(function (o) { o.setAttribute('aria-expanded', 'false'); $('#' + o.getAttribute('aria-controls')).hidden = true; });
+      if (!open) { b.setAttribute('aria-expanded', 'true'); $('#' + b.getAttribute('aria-controls')).hidden = false; }
+      measure();
+    });
+  });
+
+  /* ---------- palette: one swatch open at a time, hex copies ---------- */
+  var bolts = $$('.bolt');
+  bolts.forEach(function (b) {
+    b.addEventListener('click', function (e) {
+      var hex = e.target.closest('.hex');
+      if (hex && b.classList.contains('on')) {
+        var v = hex.getAttribute('data-copy'), old = hex.textContent;
+        if (navigator.clipboard) navigator.clipboard.writeText(v).then(function () { hex.textContent = 'Copied'; setTimeout(function () { hex.textContent = old; }, 1100); }, function () {});
+        return;
+      }
+      bolts.forEach(function (o) { var on = o === b; o.classList.toggle('on', on); o.setAttribute('aria-pressed', String(on)); });
+    });
+  });
+
+  /* ---------- testing: spotlight a finding on the screens ---------- */
+  var tst = $('.tst');
+  if (tst) {
+    $$('.tst-img', tst).forEach(function (box) {
+      var img = $('img', box), pin = $('.tst-pin', box), r = pin.getAttribute('data-r').split(',').map(Number);
+      pin.style.cssText = 'left:' + r[0] + '%;top:' + r[1] + '%;width:' + r[2] + '%;height:' + r[3] + '%';
+      var fx = img.cloneNode(false);
+      fx.className = 'tst-fx'; fx.setAttribute('aria-hidden', 'true'); fx.alt = ''; fx.removeAttribute('loading');
+      fx.style.clipPath = 'inset(' + r[1] + '% ' + (100 - r[0] - r[2]) + '% ' + (100 - r[1] - r[3]) + '% ' + r[0] + '% round 10px)';
+      box.insertBefore(fx, pin);
+    });
+    var rows = $$('.tst-row', tst);
+    rows.forEach(function (row) {
+      row.addEventListener('click', function () {
+        var was = row.getAttribute('aria-pressed') === 'true', n = row.getAttribute('data-n');
+        rows.forEach(function (o) { o.setAttribute('aria-pressed', 'false'); });
+        $$('.tst-img', tst).forEach(function (b) { b.classList.remove('spot', 'dim'); });
+        if (was) return;
+        row.setAttribute('aria-pressed', 'true');
+        $$('.tst-img', tst).forEach(function (b) { b.classList.add($('.tst-pin', b).getAttribute('data-n') === n ? 'spot' : 'dim'); });
+      });
+    });
+  }
+
+  /* ---------- prototype: flow tabs + Figma embed ---------- */
+  var tabs = $$('.tst-tab');
+  function selectTab(i, focus) {
+    tabs.forEach(function (t, j) {
+      var on = i === j;
+      t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1;
+      $('#' + t.getAttribute('aria-controls')).hidden = !on;
+    });
+    if (focus) tabs[i].focus();
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { selectTab(i); });
+    t.addEventListener('keydown', function (e) {
+      var k = e.key, n = tabs.length;
+      if (k === 'ArrowRight') { e.preventDefault(); selectTab((i + 1) % n, true); }
+      else if (k === 'ArrowLeft') { e.preventDefault(); selectTab((i - 1 + n) % n, true); }
+      else if (k === 'Home') { e.preventDefault(); selectTab(0, true); }
+      else if (k === 'End') { e.preventDefault(); selectTab(n - 1, true); }
+    });
+  });
+  var frameBox = $('#proto-frame');
+  if (frameBox && FIGMA_EMBED_URL) {
+    var loaded = false;
+    new IntersectionObserver(function (es, ob) {
+      if (!es[0].isIntersecting || loaded) return;
+      loaded = true; ob.disconnect();
+      var f = document.createElement('iframe');
+      f.src = FIGMA_EMBED_URL; f.title = 'Culinarr working prototype (Figma)'; f.allowFullscreen = true; f.loading = 'lazy';
+      frameBox.textContent = ''; frameBox.appendChild(f);
+    }, { rootMargin: '200px' }).observe(frameBox);
+  }
+
+  /* ---------- mobile: long blocks start collapsed ---------- */
+  function setupCollapse() {
+    var small = matchMedia('(max-width: 900px)').matches;
+    $$('.ia').forEach(function (b) {
+      var btn = b.nextElementSibling && b.nextElementSibling.classList.contains('mc-btn') ? b.nextElementSibling : null;
+      if (small && !btn) {
+        btn = document.createElement('button'); btn.type = 'button'; btn.className = 'mc-btn';
+        btn.textContent = 'Show the full structure'; btn.setAttribute('aria-expanded', 'false');
+        b.classList.add('mc-closed'); b.parentNode.insertBefore(btn, b.nextSibling);
+        btn.addEventListener('click', function () {
+          var open = b.classList.toggle('mc-closed') === false;
+          btn.setAttribute('aria-expanded', String(open)); btn.textContent = open ? 'Show less' : 'Show the full structure'; measure();
+        });
+      } else if (!small && btn) { btn.remove(); b.classList.remove('mc-closed'); }
+    });
+  }
+  setupCollapse(); addEventListener('resize', setupCollapse);
+
+  /* ---------- smooth wheel scrolling (off for reduced motion / Calm layout, touch and nested scrollers) ---------- */
+  (function () {
+    if (matchMedia('(pointer: coarse)').matches) return;
+    var target = scrollY, cur = scrollY, raf = 0;
+    function max() { return document.documentElement.scrollHeight - innerHeight; }
+    function step() {
+      cur += (target - cur) * 0.12;
+      if (Math.abs(target - cur) < 0.4) { cur = target; raf = 0; scrollTo(0, cur); return; }
+      scrollTo(0, cur); raf = requestAnimationFrame(step);
+    }
+    addEventListener('wheel', function (e) {
+      if (reduce || e.ctrlKey || e.defaultPrevented || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      if (e.target.closest && e.target.closest('iframe, .a11y-panel, #a11y-panel, .ia, textarea, [role="dialog"]')) return;
+      e.preventDefault();
+      if (!raf) { cur = scrollY; target = scrollY; }
+      var d = e.deltaMode === 1 ? e.deltaY * 32 : e.deltaY;
+      target = Math.max(0, Math.min(max(), target + d));
+      if (!raf) raf = requestAnimationFrame(step);
+    }, { passive: false });
+    addEventListener('keydown', function () { target = scrollY; cur = scrollY; });
+    addEventListener('scroll', function () { if (!raf) { target = scrollY; cur = scrollY; } }, { passive: true });
+  })();
+
+  /* ---------- page fade between pages ---------- */
+  requestAnimationFrame(function () { root.classList.add('sm-in'); });
+  addEventListener('pageshow', function (e) { if (e.persisted) { root.classList.remove('sm-out'); root.classList.add('sm-in'); } });
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href]');
+    if (!a || reduce || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || a.target === '_blank') return;
+    var h = a.getAttribute('href');
+    if (!/^(?:\.\.\/)?[\w.-]+\.html(?:#.*)?$/.test(h)) return;
+    e.preventDefault(); root.classList.remove('sm-in'); root.classList.add('sm-out');
+    setTimeout(function () { location.href = a.href; }, 290);
+  });
+
+  /* ---------- footer: back to top + local time ---------- */
+  var top = $('.sf-top');
+  if (top) top.addEventListener('click', function (e) { e.preventDefault(); scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' }); });
+  var clock = $('.sf-clock-t');
+  function tick() {
+    if (!clock) return;
+    var now = new Date(), t;
+    try { t = new Intl.DateTimeFormat('en-GB', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'Europe/London' }).format(now); }
+    catch (e) { t = now.toLocaleTimeString(); }
+    var h = +new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hour12: false, timeZone: 'Europe/London' }).format(now) % 24;
+    var mood = h < 6 ? 'probably asleep' : h < 9 ? 'morning coffee' : h < 12 ? 'probably designing' : h < 14 ? 'lunch break' : h < 18 ? 'probably designing' : h < 22 ? 'winding down' : 'probably asleep';
+    clock.textContent = t.toLowerCase() + ' in Preston · ' + mood;
+  }
+  tick(); setInterval(tick, 30000);
+
+  /* ---------- progressive edge blur (slow-reveal_1.txt) ---------- */
+  var EDGE_BLURS = [0.5, 1, 2, 4, 8, 16];
+  function edgeBlur(where) {
+    var bar = document.createElement('div');
+    bar.className = 'edge-blur edge-blur--' + where; bar.setAttribute('aria-hidden', 'true');
+    var n = EDGE_BLURS.length, step = 100 / (n + 2);
+    EDGE_BLURS.forEach(function (b, i) {
+      var l = document.createElement('span'), last = i === n - 1;
+      l.style.setProperty('--b', b + 'px'); l.style.setProperty('--s0', (i * step) + '%'); l.style.setProperty('--s1', ((i + 1) * step) + '%');
+      l.style.setProperty('--s2', last ? '100%' : ((i + 2) * step) + '%'); l.style.setProperty('--s3', last ? '100%' : ((i + 3) * step) + '%');
+      bar.appendChild(l);
+    });
+    document.body.appendChild(bar); return bar;
+  }
+  edgeBlur('top');
+  var bottomBar = edgeBlur('bottom');
+  function edgeState() { bottomBar.classList.toggle('is-hidden', root.scrollHeight - (scrollY + innerHeight) < 200); }
+  addEventListener('scroll', edgeState, { passive: true }); edgeState();
+
+
+  /* ---------- gestures: swipe or drag sideways (vertical scroll stays free); every swipe has a button and key alternative ---------- */
+  function swipe(el, prev, next) {
+    var x0 = null, y0 = 0, t0 = 0, lock = null, id = null;
+    function reset() { x0 = null; lock = null; el.style.removeProperty('--drag'); el.classList.remove('dragging'); }
+    el.addEventListener('pointerdown', function (e) { if (e.pointerType === 'mouse' && e.button !== 0) return; x0 = e.clientX; y0 = e.clientY; t0 = Date.now(); id = e.pointerId; lock = null; });
+    el.addEventListener('pointermove', function (e) {
+      if (x0 === null || e.pointerId !== id) return;
+      var dx = e.clientX - x0, dy = e.clientY - y0;
+      if (!lock && Math.max(Math.abs(dx), Math.abs(dy)) > 12) lock = Math.abs(dx) > Math.abs(dy) * 1.2 ? 'x' : 'y';
+      if (lock === 'x' && !reduce) { el.classList.add('dragging'); el.style.setProperty('--drag', Math.max(-36, Math.min(36, dx * 0.25)) + 'px'); }
+    });
+    el.addEventListener('pointerup', function (e) {
+      if (x0 === null || e.pointerId !== id) return;
+      var dx = e.clientX - x0, v = Math.abs(dx) / Math.max(1, Date.now() - t0), was = lock;
+      reset();
+      if (was === 'x' && (Math.abs(dx) > 48 || v > 0.5)) { if (dx < 0) next(); else prev(); }
+    });
+    el.addEventListener('pointercancel', reset);
+  }
+  $$('[data-slider]').forEach(function (box) {
+    var ticks = $$('.ticks button', box), slides = $$('.slider img', box), cur = 0, view = $('.slider', box);
+    function go(i) {
+      cur = (i + slides.length) % slides.length;
+      ticks.forEach(function (o, j) { o.setAttribute('aria-pressed', String(cur === j)); });
+      slides.forEach(function (s, j) { s.classList.toggle('on', cur === j); });
+    }
+    ticks.forEach(function (t, i) { t.addEventListener('click', function () { go(i); }); });
+    var pv = $('.sl-prev', box), nx = $('.sl-next', box);
+    if (pv) pv.addEventListener('click', function () { go(cur - 1); });
+    if (nx) nx.addEventListener('click', function () { go(cur + 1); });
+    view.tabIndex = 0;
+    view.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') { e.preventDefault(); go(cur + 1); } else if (e.key === 'ArrowLeft') { e.preventDefault(); go(cur - 1); } });
+    swipe(view, function () { go(cur - 1); }, function () { go(cur + 1); });
+  });
+  $$('.st-panels[data-swipe]').forEach(function (p) {
+    function cur() { return tabs.findIndex(function (t) { return t.getAttribute('aria-selected') === 'true'; }); }
+    swipe(p, function () { selectTab(Math.max(0, cur() - 1)); }, function () { selectTab(Math.min(tabs.length - 1, cur() + 1)); });
+  });
+
+  /* ---------- react to the accessibility panel / OS setting at runtime ---------- */
+  new MutationObserver(syncMotion).observe(root, { attributes: true, attributeFilter: ['data-a11y-calm'] });
+  if (mqReduce.addEventListener) mqReduce.addEventListener('change', syncMotion);
+  syncMotion();
+})();
+
+</script>
+</body>
+</html>
