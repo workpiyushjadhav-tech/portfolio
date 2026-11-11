@@ -32,24 +32,24 @@ jobs:
           node-version: 20
 
       - name: Build Tailwind CSS
-        run: npx --yes tailwindcss@3 -i ./input.css -o ./site/css/tailwind.css --minify
+        run: npx --yes tailwindcss@3 -i ./input.css -o ./docs/css/tailwind.css --minify
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Verify website files
+      - name: Verify webdocs files
         run: |
-          test -f ./site/index.html || {
-            echo "ERROR: site/index.html is missing"
+          test -f ./docs/index.html || {
+            echo "ERROR: docs/index.html is missing"
             exit 1
           }
           echo "Homepage found:"
-          ls -la ./site
+          ls -la ./docs
 
-      - name: Upload site folder
+      - name: Upload docs folder
         uses: actions/upload-pages-artifact@v4
         with:
-          path: ./site
+          path: ./docs
 
       - name: Deploy to GitHub Pages
         id: deployment
