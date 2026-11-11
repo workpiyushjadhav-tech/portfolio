@@ -1,0 +1,38 @@
+/* Navbar — from portfolio-new-theme (floating header). Same structure, spacing and behaviour;
+   Geist swapped for the site's Plus Jakarta Sans and colours mapped to the site tokens. */
+.site-header{position:sticky;top:20px;z-index:var(--z-nav,20);display:flex;align-items:center;gap:32px;width:calc(100% - 64px);max-width:1320px;height:68px;margin:20px auto 0;padding:0 22px;border:1px solid rgba(255,255,255,.09);border-radius:1.25rem;background:rgba(38,33,26,.7);box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 8px 28px rgba(0,0,0,.12);backdrop-filter:blur(22px) saturate(140%);-webkit-backdrop-filter:blur(22px) saturate(140%);font-family:var(--font-body)}
+html[data-theme="light"] .site-header{background:rgba(255,253,248,.82);border-color:rgba(226,214,184,.72);box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 4px 18px rgba(60,40,10,.04);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%)}
+html:not([data-theme]) .site-header{background:rgba(255,253,248,.82);border-color:rgba(226,214,184,.72)}
+.site-header .brand{display:flex;align-items:center;flex:0 1 auto;gap:12px;min-height:44px;margin:0;font-size:15px;font-weight:650;letter-spacing:0;white-space:nowrap;text-decoration:none;color:var(--ink)}
+.site-header .brand .logo{flex:none;color:var(--ink)}
+.site-header nav{display:flex;align-items:center;gap:28px;width:auto;margin:0 0 0 auto;padding:0;border:0;font-size:14px;font-weight:400;line-height:1.5;text-transform:none}
+.site-header nav a{display:flex;align-items:center;min-height:44px;padding:12px 0;border:0;border-radius:0;background:transparent;box-shadow:none;color:var(--ink-soft);font:inherit;text-decoration:none}
+.site-header nav a:hover,.site-header nav a[aria-current]{color:var(--ink);background:transparent}
+.site-header .header-actions{display:flex;align-items:center;flex:0 0 auto;gap:4px;padding-left:16px;border-left:1px solid var(--line)}
+.site-header .icon-button{display:grid;place-items:center;width:44px;height:44px;padding:0;border:0;border-radius:4px;background:transparent;color:var(--ink);cursor:pointer}
+.site-header .icon-button:hover{background:var(--line)}
+.site-header .icon-button svg{width:20px;height:20px}
+.site-header .menu-toggle{display:none}
+.site-header .icon-button.theme-toggle{border-radius:50%;overflow:hidden;flex-shrink:0;width:44px;height:44px}
+.theme-sky{position:relative;display:block;width:26px;height:26px;overflow:hidden;pointer-events:none}
+.theme-sky>span{position:absolute;inset:3px;display:grid;place-items:center}
+.theme-sky svg{display:block;width:20px;height:20px}
+.theme-sun{color:var(--ink-soft);transform:translate(0,0) rotate(0);opacity:1}
+.theme-moon{color:#c9d8fa;transform:translate(22px,30px) rotate(65deg);opacity:0}
+html[data-theme="dark"] .theme-sun{transform:translate(-22px,30px) rotate(-65deg);opacity:0}
+html[data-theme="dark"] .theme-moon{transform:translate(0,0) rotate(0);opacity:1}
+html[data-theme="dark"] .site-header{--line:rgba(255,255,255,.14)}
+html.theme-switching body,html.theme-switching .site-header{transition:background-color 600ms ease,color 600ms ease,border-color 600ms ease}
+.site-header :focus-visible{outline:3px solid var(--accent-btn);outline-offset:2px}
+@media (max-width:640px){
+  .site-header{top:12px;width:calc(100% - 24px);height:60px;margin-top:12px;padding:0 14px;gap:12px}
+  .site-header .brand{min-width:0;font-size:14px}
+  .site-header .header-actions{margin-left:auto;padding:0;border:0}
+  .site-header .menu-toggle{display:grid}
+  .site-header nav{justify-content:space-between;position:absolute;top:68px;left:0;right:0;width:auto;margin:0;padding:12px 20px;border:1px solid var(--line);border-radius:8px;background:var(--card);opacity:0;visibility:hidden;pointer-events:none;transform:translateY(-10px);transition:opacity 220ms ease,transform 220ms ease,visibility 0s linear 220ms}
+  .site-header.menu-open nav{opacity:1;visibility:visible;pointer-events:auto;transform:translateY(0);transition-delay:0s}
+}
+@media (prefers-reduced-motion:reduce){.site-header nav{transition:none}.theme-sky>span{transition:none}html.theme-switching body,html.theme-switching .site-header{transition:none}}
+html[data-a11y-calm] .site-header{backdrop-filter:none;-webkit-backdrop-filter:none}
+html[data-a11y-calm] .site-header nav,html[data-a11y-calm] html.theme-switching body{transition:none}
+html[data-a11y-contrast] .site-header{border-width:2px;border-color:var(--ink);background:var(--paper)}
