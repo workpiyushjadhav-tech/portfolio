@@ -55,6 +55,9 @@ d.dataset.theme=t;var m=document.querySelector('meta[name="theme-color"]');if(m)
 .solution{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--gap);margin:8px 0 32px}
 .solution article{display:flex;flex-direction:column;overflow:hidden;border:1px solid var(--line-strong);border-radius:var(--r-lg);background:var(--card)}
 .solution img{display:block;width:100%;aspect-ratio:16/10;object-fit:contain;padding:16px 16px 0;background:var(--paper)}
+/* pause control: short pill pinned to the bottom-left of the animation, 8px in from the edges */
+.solution article{position:relative;container-type:inline-size}
+.solution .gif-toggle{position:absolute;left:8px;top:calc(62.5cqw - 40px);z-index:1;height:32px;min-height:0;margin:0;padding:0 8px;width:auto;transition:background-color .15s ease-out}
 .solution .body{display:flex;flex-direction:column;gap:6px;padding:16px 18px 20px}
 .solution .step{font-size:.75rem;font-weight:700;color:var(--accent-btn)}
 .solution h3{margin:0;font-family:var(--font-display);font-size:1.125rem}
@@ -87,7 +90,8 @@ d.dataset.theme=t;var m=document.querySelector('meta[name="theme-color"]');if(m)
 .media{margin:28px auto}
 .media img{display:block;width:100%;height:auto;border-radius:var(--r-lg);border:1.5px solid var(--line-strong)}
 .media figcaption{margin-top:10px;font-size:.8125rem;color:var(--ink-faint);text-align:center}
-.reasons{margin:0;padding-left:1.2em;display:grid;gap:8px}
+.reasons{margin:0;padding-left:1.25em;display:grid;gap:8px;list-style:disc outside}
+.reasons li::marker{color:var(--accent-btn)}
 .tasks{display:grid;gap:10px}
 .tasks .options-label{margin:0 0 4px}
 .task{display:grid;grid-template-columns:200px 1fr 52px;align-items:center;gap:16px;font-size:.9375rem}
@@ -219,7 +223,8 @@ body.case-page .site-header{position:fixed;top:20px;left:50%;transform:translate
 #cs2 .pc-t{display:inline-flex;align-items:center;gap:6px;font-size:.8125rem;font-weight:600;color:var(--accent-btn)}
 #cs2 .pc-t::after{content:'+';font-size:1.1rem;line-height:1;transition:transform .3s}
 #cs2 .pc[aria-expanded="true"] .pc-t::after{transform:rotate(45deg)}
-#cs2 .pp-open{margin-top:16px;padding:clamp(22px,3vw,36px);border:1.5px solid var(--accent-btn);border-radius:var(--r-lg);background:var(--card);animation:openIn .45s cubic-bezier(.22,1,.36,1)}
+#cs2 .pp-open{margin:0;padding:clamp(22px,3vw,36px);border:1.5px solid var(--accent-btn);border-radius:var(--r-lg);background:var(--card);animation:openIn .32s cubic-bezier(.22,1,.36,1)}
+@media(min-width:761px){#cs2 .pers>.pc{grid-row:1}#cs2 .pers>.pp-open{grid-column:1/-1;grid-row:2}}
 #cs2 .pp-open[hidden]{display:none}
 #cs2 .pp-open blockquote{margin:0 0 14px;font-family:var(--font-display);font-size:clamp(1.25rem,2.4vw,1.75rem);line-height:1.3;color:var(--ink)}
 #cs2 .pp-open p{margin:0}
@@ -247,33 +252,36 @@ body.case-page .site-header{position:fixed;top:20px;left:50%;transform:translate
 @media(max-width:900px){#cs2 .mc-btn{display:block}#cs2 .mc-closed{max-height:260px;overflow:hidden;-webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent)}}
 
 /* ---------- design system ---------- */
-#cs2 .bolts{display:flex;gap:10px;height:280px}
-#cs2 .bolt{position:relative;flex:1 1 0;min-width:0;display:flex;flex-direction:column;justify-content:space-between;padding:18px 16px;text-align:left;font:inherit;cursor:pointer;border:1px solid var(--line-strong);border-radius:var(--r-lg);overflow:hidden;transition:flex-grow .6s cubic-bezier(.22,1,.36,1)}
-#cs2 .bolt.on{flex-grow:3.4}
-#cs2 .bolt .tag{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.85;writing-mode:horizontal-tb}
-#cs2 .bolt .in{display:grid;gap:6px;opacity:0;transform:translateY(8px);transition:opacity .4s ease,transform .4s ease}
-#cs2 .bolt.on .in{opacity:1;transform:none;transition-delay:.15s}
-#cs2 .bolt .nm{font-family:var(--font-display);font-size:1.375rem;font-weight:700}
-#cs2 .bolt .use{font-size:.8125rem;line-height:1.45;max-width:30ch}
-#cs2 .bolt .hex{width:fit-content;font-family:var(--font-mono);font-size:.8125rem;padding:3px 9px;border-radius:999px;border:1px solid currentColor;cursor:copy}
-#cs2 .bolt:not(.on) .tag{writing-mode:vertical-rl;transform:rotate(180deg)}
-@media(max-width:760px){#cs2 .bolts{flex-direction:column;height:auto}#cs2 .bolt{flex:none;min-height:64px}#cs2 .bolt.on{min-height:190px}#cs2 .bolt:not(.on) .tag{writing-mode:horizontal-tb;transform:none}}
+#cs2 .bolts{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:minmax(104px,auto);gap:10px}
+#cs2 .bolt{position:relative;grid-column:span 2;min-width:0;display:flex;flex-direction:column;justify-content:space-between;gap:10px;padding:14px 16px;border:1px solid var(--line-strong);border-radius:var(--r-lg);overflow:hidden}
+#cs2 .bolt:first-child{grid-row:span 2}
+#cs2 .bolt .tag{font-size:.6875rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.85}
+#cs2 .bolt .in{display:grid;gap:4px;justify-items:start}
+#cs2 .bolt .nm{font-family:var(--font-display);font-size:1.125rem;font-weight:700;line-height:1.15}
+#cs2 .bolt:first-child .nm{font-size:1.5rem}
+#cs2 .bolt .use{font-size:.75rem;line-height:1.45;max-width:34ch}
+#cs2 .bolt .hex{margin-top:4px;padding:3px 9px;font-family:var(--font-mono);font-size:.75rem;color:inherit;background:transparent;border:1px solid currentColor;border-radius:999px;cursor:copy;transition:background-color .15s ease-out}
+#cs2 .bolt .hex:hover{background:color-mix(in srgb,currentColor 14%,transparent)}
+#cs2 .bolt .hex:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+@media(max-width:900px){#cs2 .bolts{grid-template-columns:1fr 1fr;grid-auto-rows:auto}#cs2 .bolt,#cs2 .bolt:first-child{grid-column:auto;grid-row:auto}#cs2 .bolt:first-child{grid-column:1/-1}}
 #cs2 .types{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 #cs2 .ty{display:grid;gap:8px;padding:24px;border:1px solid var(--line-strong);border-radius:var(--r-lg);background:var(--card)}
 #cs2 .ty-n{font-size:clamp(2.25rem,5vw,3.5rem);line-height:1}
 #cs2 .ty-u{font-size:.8125rem;color:var(--ink-faint)}
 #cs2 .ty-s{font-size:1.125rem;color:var(--ink)}
-#cs2 .ds-cmp{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-#cs2 .cmp-cell{display:grid;gap:14px;align-content:start;padding:24px;border:1px solid var(--line-strong);border-radius:var(--r-lg);background:var(--card)}
+#cs2 .ds-cmp{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+#cs2 .cmp-cell{grid-column:span 2;display:grid;gap:10px;align-content:space-between;padding:14px 16px;border:1px solid var(--line-strong);border-radius:var(--r-lg);background:var(--card)}
+#cs2 .cmp-cell:nth-child(1){grid-column:span 3}#cs2 .cmp-cell:nth-child(3){grid-column:span 1}
 #cs2 .cmp-l{font-size:.8125rem;font-weight:700;color:var(--ink)}
-#cs2 .cmp-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;min-height:56px}
+#cs2 .cmp-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;min-height:44px}
 #cs2 .cmp-n{font-size:.8125rem;color:var(--ink-faint)}
 #cs2 .c-add{padding:10px 22px;font:inherit;font-family:'Inter','Work Sans',sans-serif;font-weight:700;color:#fff;background:#E02008;border:0;border-radius:999px;cursor:pointer;transition:background .2s,transform .2s}
 #cs2 .c-add:hover,#cs2 .c-add.is-hover{background:#B81A06;transform:translateY(-1px)}
 #cs2 .c-chip{padding:8px 16px;font-family:'Inter','Work Sans',sans-serif;font-size:.875rem;font-weight:500;color:#080808;background:#fff;border:1px solid #E8E8E8;border-radius:999px;transition:background .2s,color .2s}
 #cs2 .c-chip.c-on{background:#E02008;border-color:#E02008;color:#fff;font-weight:700}
 #cs2 .c-rate{padding:5px 12px;font-family:'Inter','Work Sans',sans-serif;font-size:.875rem;font-weight:700;color:#080808;background:#FFB800;border-radius:999px}
-@media(max-width:900px){#cs2 .ds-cmp,#cs2 .types{grid-template-columns:1fr}}
+@media(max-width:900px){#cs2 .types{grid-template-columns:1fr}#cs2 .cmp-cell:nth-child(1){grid-column:1/-1}#cs2 .cmp-cell:nth-child(2){grid-column:span 4}#cs2 .cmp-cell:nth-child(3){grid-column:span 2}}
+@media(max-width:560px){#cs2 .ds-cmp{grid-template-columns:1fr}#cs2 .cmp-cell:nth-child(n){grid-column:1/-1}}
 #cs2 .art{display:grid;grid-template-columns:minmax(220px,.7fr) 1.3fr;gap:clamp(24px,4vw,56px);align-items:center;margin-top:56px}
 #cs2 .art h3{margin:0 0 12px;font-size:clamp(1.5rem,2.6vw,2rem)}
 #cs2 .ticks{display:grid;gap:10px;margin-top:24px}
@@ -288,16 +296,14 @@ body.case-page .site-header{position:fixed;top:20px;left:50%;transform:translate
 @media(max-width:760px){#cs2 .art{grid-template-columns:1fr}}
 
 /* ---------- testing ---------- */
-#cs2 .tst{display:grid;grid-template-columns:minmax(240px,.8fr) 1.6fr;gap:clamp(20px,3vw,40px);align-items:start;margin:36px 0}
-#cs2 .tst-list{display:grid;gap:12px;margin:0;padding:0;list-style:none}
-#cs2 .tst-row{display:grid;gap:6px;width:100%;padding:16px 18px;text-align:left;font:inherit;color:inherit;cursor:pointer;border:1px solid var(--line-strong);border-radius:var(--r-lg);background:var(--card);transition:border-color .25s,background .25s}
+#cs2 .tst{display:grid;grid-template-columns:1fr 1fr;gap:16px clamp(16px,3vw,40px);align-items:stretch;margin:36px 0}
+#cs2 .tst-row{display:grid;align-content:start;gap:6px;width:100%;padding:16px 18px;text-align:left;font:inherit;color:inherit;cursor:pointer;border:1px solid var(--line-strong);border-radius:var(--r-lg);background:var(--card);transition:border-color .25s,background .25s}
 #cs2 .tst-row b{font-family:var(--font-display);font-size:1.0625rem}
 #cs2 .tst-row span{font-size:.9375rem;line-height:1.55;color:var(--ink-soft)}
 #cs2 .tst-row[aria-pressed="true"]{border-color:var(--accent-btn);background:color-mix(in srgb,var(--accent-btn) 7%,var(--card))}
-#cs2 .tst-shots{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-#cs2 .tst-shots figure{margin:0;display:flex;flex-direction:column;gap:12px;padding:12px;border:1px solid var(--line-strong);border-radius:var(--r-lg);background:var(--card)}
-#cs2 .tst-shots .tag{align-self:flex-start;padding:3px 12px;border-radius:999px;border:1px solid var(--line-strong);font-size:.75rem;font-weight:700}
-#cs2 .tst-shots .is-after .tag{background:var(--accent-btn);border-color:var(--accent-btn);color:#fff}
+#cs2 .tst>figure{margin:0;display:flex;flex-direction:column;gap:12px;padding:12px;border:1px solid var(--line-strong);border-radius:var(--r-lg);background:var(--card)}
+#cs2 .tst>figure .tag{align-self:flex-start;padding:3px 12px;border-radius:999px;border:1px solid var(--line-strong);font-size:.75rem;font-weight:700}
+#cs2 .tst>.is-after .tag{background:var(--accent-btn);border-color:var(--accent-btn);color:#fff}
 #cs2 .tst-img{position:relative;overflow:hidden;border-radius:calc(var(--r-lg) - 6px);aspect-ratio:4/3}
 #cs2 .tst-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:filter .5s ease}
 #cs2 .tst-img .tst-fx{opacity:0;transition:opacity .5s ease}
@@ -306,8 +312,8 @@ body.case-page .site-header{position:fixed;top:20px;left:50%;transform:translate
 #cs2 .tst-img.dim>img{filter:brightness(.9) saturate(.8)}
 #cs2 .tst-pin{position:absolute;border:2px solid var(--accent-btn);border-radius:10px;opacity:0;transform:scale(1.25);transition:opacity .4s ease,transform .5s cubic-bezier(.34,1.4,.64,1);pointer-events:none}
 #cs2 .tst-img.spot .tst-pin{opacity:1;transform:none}
-@media(max-width:900px){#cs2 .tst{grid-template-columns:1fr}}
-@media(max-width:560px){#cs2 .tst-shots{grid-template-columns:1fr}}
+@media(min-width:761px){#cs2 .tst>:nth-child(1){grid-column:1;grid-row:1}#cs2 .tst>:nth-child(2){grid-column:1;grid-row:2}#cs2 .tst>:nth-child(3){grid-column:2;grid-row:1}#cs2 .tst>:nth-child(4){grid-column:2;grid-row:2}}
+@media(max-width:760px){#cs2 .tst{grid-template-columns:1fr}}
 
 /* ---------- prototype ---------- */
 #cs2 .st-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:28px 0 14px}
@@ -330,14 +336,18 @@ body.case-page .site-header{position:fixed;top:20px;left:50%;transform:translate
 #cs2 .nx-list{margin-block:20px}
 @media(max-width:760px){#cs2 .vr-list{grid-template-columns:1fr}}
 
-/* ---------- footer additions ---------- */
-.sf-clock{display:inline-flex;align-items:center;gap:8px;margin-left:16px;font-size:.875rem;color:var(--ink-soft)}
+/* ---------- footer (same as 2index.html) ---------- */
+/* the page background layer (#cs2 .bg) is fixed and full-screen: the footer must be positioned to paint above it */
+body.case-page>footer{position:relative;z-index:1}
+.sf-clock{display:inline-flex;align-items:center;gap:8px;margin-left:16px;font-size:.875rem;color:rgba(251,246,236,.72)}
 .sf-dot{width:8px;height:8px;border-radius:50%;background:#2E9E5B}
-.sf-top{display:inline-grid;margin-right:20px;font-weight:600;color:var(--ink);text-decoration:none}
+.sf-top{display:inline-grid;margin-right:20px;font-weight:600;color:rgba(251,246,236,.72);text-decoration:none}
 .sf-top>span{grid-area:1/1;transition:opacity .25s,transform .35s cubic-bezier(.22,1,.36,1)}
 .sf-b{opacity:0;transform:translateY(8px)}
 .sf-top:hover .sf-a,.sf-top:focus-visible .sf-a{opacity:0;transform:translateY(-8px)}
 .sf-top:hover .sf-b,.sf-top:focus-visible .sf-b{opacity:1;transform:none}
+.sf-top:hover,.sf-top:focus-visible{color:var(--on-panel,#fbf6ec)}
+@media(max-width:479px){.sf-clock{margin-left:0}.sf-top{margin-right:12px}}
 
 /* edge blur (slow-reveal_1.txt) */
 .edge-blur{position:fixed;left:0;right:0;z-index:4;height:calc(var(--edge,88px) + 2px);pointer-events:none;transition:opacity .3s ease}
@@ -350,7 +360,6 @@ body.case-page .site-header{position:fixed;top:20px;left:50%;transform:translate
 html[data-a11y-contrast] .edge-blur,html[data-a11y-calm] .edge-blur{display:none}
 
 #cs2 .t-wrap>p,#cs2 .t-wrap>.lede-p,#cs2 .t-wrap>.case-pullquote{max-width:760px}
-#cs2 .t-wrap .tst{grid-template-columns:minmax(240px,.7fr) 1.8fr}
 
 </style>
 </head>
@@ -469,10 +478,10 @@ html[data-a11y-contrast] .edge-blur,html[data-a11y-calm] .edge-blur{display:none
       <div class="prose rv"><p>I used two personas, built from that research and the four interviews: Sam, a host who just wants everyone fed without becoming the evening's logistics manager, and Zara, a student with dietary restrictions who'd rather quietly filter a menu than ask a server to double-check every dish.</p></div>
       <div class="pers rv" role="group" aria-label="Personas: tap one to open it">
         <button type="button" class="pc" aria-expanded="false" aria-controls="pp-sam"><img src="../images/case-studies/culinarr/persona_adam.avif" width="600" height="760" loading="lazy" alt="Sam persona"><span><span class="pc-n">Sam, 28 — “The Organiser”</span><span class="pc-r">Marketing Manager</span><span class="pc-t">Tap to open</span></span></button>
+        <div class="pp-open" id="pp-sam" hidden><blockquote>“I just want everyone to have a good time without me spending the whole night being the logistics manager.”</blockquote><p>A host who just wants everyone fed without becoming the evening’s logistics manager.</p></div>
         <button type="button" class="pc" aria-expanded="false" aria-controls="pp-zara"><img src="../images/case-studies/culinarr/persona_zara.avif" width="600" height="760" loading="lazy" alt="Zara persona"><span><span class="pc-n">Zara, 24 — “The Anxious Diner”</span><span class="pc-r">Postgraduate Student</span><span class="pc-t">Tap to open</span></span></button>
+        <div class="pp-open" id="pp-zara" hidden><blockquote>“I have dietary restrictions but I hate making a fuss — I just want to know what I can eat before I get to the counter.”</blockquote><p>A student with dietary restrictions who’d rather quietly filter a menu than ask a server to double-check every dish.</p></div>
       </div>
-      <div class="pp-open" id="pp-sam" hidden><blockquote>“I just want everyone to have a good time without me spending the whole night being the logistics manager.”</blockquote><p>A host who just wants everyone fed without becoming the evening’s logistics manager.</p></div>
-      <div class="pp-open" id="pp-zara" hidden><blockquote>“I have dietary restrictions but I hate making a fuss — I just want to know what I can eat before I get to the counter.”</blockquote><p>A student with dietary restrictions who’d rather quietly filter a menu than ask a server to double-check every dish.</p></div>
     </div>
   </section>
 
@@ -536,7 +545,7 @@ html[data-a11y-contrast] .edge-blur,html[data-a11y-calm] .edge-blur{display:none
       
 <div class="pds">
   <div class="cap first">Colour</div>
-  <div class="bolts" role="group" aria-label="Culinarr colours"><button type="button" class="bolt on" aria-pressed="true" style="background:#E02008;color:#FFFFFF"><span class="tag">Primary actions</span><span class="in"><span class="nm">Culinarr red</span><span class="use">The Add buttons, the vendor header strip and the live-session banner.</span><span class="hex" data-copy="#E02008">#E02008</span></span></button><button type="button" class="bolt" aria-pressed="false" style="background:#FFB800;color:#221E17"><span class="tag">Ratings</span><span class="in"><span class="nm">Amber</span><span class="use">The rating badge on each vendor header.</span><span class="hex" data-copy="#FFB800">#FFB800</span></span></button><button type="button" class="bolt" aria-pressed="false" style="background:#080808;color:#FFFFFF"><span class="tag">Text and headers</span><span class="in"><span class="nm">Ink</span><span class="use">Vendor names, prices and the dark photo gradient behind them.</span><span class="hex" data-copy="#080808">#080808</span></span></button><button type="button" class="bolt" aria-pressed="false" style="background:#F8F8F8;color:#221E17"><span class="tag">Screens</span><span class="in"><span class="nm">Surface</span><span class="use">The page behind menu cards and the search field.</span><span class="hex" data-copy="#F8F8F8">#F8F8F8</span></span></button><button type="button" class="bolt" aria-pressed="false" style="background:#E8E8E8;color:#221E17"><span class="tag">Dividers</span><span class="in"><span class="nm">Line</span><span class="use">Image placeholders, outlines and quiet separators.</span><span class="hex" data-copy="#E8E8E8">#E8E8E8</span></span></button></div>
+  <div class="bolts" role="group" aria-label="Culinarr colours"><div class="bolt" style="background:#E02008;color:#FFFFFF"><span class="tag">Primary actions</span><span class="in"><span class="nm">Culinarr red</span><span class="use">The Add buttons, the vendor header strip and the live-session banner.</span><button type="button" class="hex" data-copy="#E02008" aria-label="Copy #E02008">#E02008</button></span></div><div class="bolt" style="background:#FFB800;color:#221E17"><span class="tag">Ratings</span><span class="in"><span class="nm">Amber</span><span class="use">The rating badge on each vendor header.</span><button type="button" class="hex" data-copy="#FFB800" aria-label="Copy #FFB800">#FFB800</button></span></div><div class="bolt" style="background:#080808;color:#FFFFFF"><span class="tag">Text and headers</span><span class="in"><span class="nm">Ink</span><span class="use">Vendor names, prices and the dark photo gradient behind them.</span><button type="button" class="hex" data-copy="#080808" aria-label="Copy #080808">#080808</button></span></div><div class="bolt" style="background:#F8F8F8;color:#221E17"><span class="tag">Screens</span><span class="in"><span class="nm">Surface</span><span class="use">The page behind menu cards and the search field.</span><button type="button" class="hex" data-copy="#F8F8F8" aria-label="Copy #F8F8F8">#F8F8F8</button></span></div><div class="bolt" style="background:#E8E8E8;color:#221E17"><span class="tag">Dividers</span><span class="in"><span class="nm">Line</span><span class="use">Image placeholders, outlines and quiet separators.</span><button type="button" class="hex" data-copy="#E8E8E8" aria-label="Copy #E8E8E8">#E8E8E8</button></span></div></div>
   <div class="cap">Type</div>
   <div class="types">
     <div class="ty rv"><span class="ty-n" style="font-family:'Inter','Work Sans',sans-serif;font-weight:700">Inter</span><span class="ty-u">Headings, prices and buttons in the app</span><span class="ty-s" style="font-family:'Inter','Work Sans',sans-serif;font-weight:700">Garlic Bread Bites £5.00</span></div>
@@ -596,15 +605,11 @@ html[data-a11y-contrast] .edge-blur,html[data-a11y-calm] .edge-blur{display:none
 <cite>— P3, during testing</cite>
 </div>
 <p class="rv">The filter icon was being read as general settings, not dietary filtering. The fix wasn't a better icon — it was removing the need to guess at all.</p>
-<div class="tst rv" data-active="">
-  <ul class="tst-list" aria-label="Filter finding: pick one to spotlight it on the screens">
-    <li><button type="button" class="tst-row" data-n="1" aria-pressed="false"><b>The issue</b><span>An icon-only filter, easily mistaken for general settings. Two of five testers never found it unprompted.</span></button></li>
-    <li><button type="button" class="tst-row" data-n="2" aria-pressed="false"><b>The fix</b><span>A persistent position with the text label “Filter by diet”, not icon alone, aligned with WCAG 1.4.1. Retested: confusion dropped by roughly 5%.</span></button></li>
-  </ul>
-  <div class="tst-shots">
-    <figure><span class="tag">Before</span><div class="tst-img"><img src="../images/case-studies/culinarr/c_1.avif" width="900" height="675" loading="lazy" alt="Before: icon-only dietary filter"><span class="tst-pin" data-n="1" data-r="66.5,29,8,7"></span></div></figure>
-    <figure class="is-after"><span class="tag">After</span><div class="tst-img"><img src="../images/case-studies/culinarr/c_2.avif" width="900" height="675" loading="lazy" alt="After: labelled Filter by Diet button"><span class="tst-pin" data-n="2" data-r="56,47.5,19.5,7.5"></span></div></figure>
-  </div>
+<div class="tst rv" data-active="" role="group" aria-label="Filter finding: pick one to spotlight it on the screens">
+  <button type="button" class="tst-row" data-n="1" aria-pressed="false"><b>The issue</b><span>An icon-only filter, easily mistaken for general settings. Two of five testers never found it unprompted.</span></button>
+  <figure><span class="tag">Before</span><div class="tst-img"><img src="../images/case-studies/culinarr/c_1.avif" width="900" height="675" loading="lazy" alt="Before: icon-only dietary filter"><span class="tst-pin" data-n="1" data-r="66.5,29,8,7"></span></div></figure>
+  <button type="button" class="tst-row" data-n="2" aria-pressed="false"><b>The fix</b><span>A persistent position with the text label “Filter by diet”, not icon alone, aligned with WCAG 1.4.1. Retested: confusion dropped by roughly 5%.</span></button>
+  <figure class="is-after"><span class="tag">After</span><div class="tst-img"><img src="../images/case-studies/culinarr/c_2.avif" width="900" height="675" loading="lazy" alt="After: labelled Filter by Diet button"><span class="tst-pin" data-n="2" data-r="56,47.5,19.5,7.5"></span></div></figure>
 </div>
 <p class="rv">Testing also exposed a gap in the split. P3 asked what happens if one person wants to pay individually while the other three split the rest, which my original design didn't cover. I changed it so the split mode can be switched even after someone has paid, and the remaining amount adjusts automatically.</p>
 <p class="rv">SUS came out at 79.5 (“Good”) against a target of 75. With five participants I'd treat that as directional. The colour-contrast checks I ran all passed WCAG AA. The bigger limit is who was in the room: all five were university peers with high digital literacy. Older diners, people less comfortable with new interfaces, and anyone in a genuinely loud food hall weren't tested.</p>
@@ -840,17 +845,11 @@ html[data-a11y-contrast] .edge-blur,html[data-a11y-calm] .edge-blur{display:none
     });
   });
 
-  /* ---------- palette: one swatch open at a time, hex copies ---------- */
-  var bolts = $$('.bolt');
-  bolts.forEach(function (b) {
-    b.addEventListener('click', function (e) {
-      var hex = e.target.closest('.hex');
-      if (hex && b.classList.contains('on')) {
-        var v = hex.getAttribute('data-copy'), old = hex.textContent;
-        if (navigator.clipboard) navigator.clipboard.writeText(v).then(function () { hex.textContent = 'Copied'; setTimeout(function () { hex.textContent = old; }, 1100); }, function () {});
-        return;
-      }
-      bolts.forEach(function (o) { var on = o === b; o.classList.toggle('on', on); o.setAttribute('aria-pressed', String(on)); });
+  /* ---------- palette: tap a hex to copy it ---------- */
+  $$('.bolt .hex').forEach(function (hex) {
+    hex.addEventListener('click', function () {
+      var v = hex.getAttribute('data-copy'), old = hex.textContent;
+      if (navigator.clipboard) navigator.clipboard.writeText(v).then(function () { hex.textContent = 'Copied'; setTimeout(function () { hex.textContent = old; }, 1100); }, function () {});
     });
   });
 
@@ -1015,4 +1014,3 @@ html[data-a11y-contrast] .edge-blur,html[data-a11y-calm] .edge-blur{display:none
 </script>
 </body>
 </html>
-
