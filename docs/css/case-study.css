@@ -18,7 +18,7 @@ html[data-theme="dark"][data-a11y-contrast]{--c-ink:255 255 255;--c-soft:242 237
 /* ---------- layout ---------- */
 .cs-main{position:relative;isolation:isolate;padding-top:84px}
 .cs-main::before{content:'';position:absolute;inset:0 0 auto 0;height:560px;z-index:-1;pointer-events:none;background:radial-gradient(circle,var(--line) 1.4px,transparent 1.4px) 0 0/30px 30px;-webkit-mask-image:linear-gradient(#000,transparent);mask-image:linear-gradient(#000,transparent)}
-.cs-main .container{padding-inline:0}
+.cs-main .container {width: 100%;  max-width: none;  padding-inline: 0;}
 .cs-main section{padding:0}
 .cs-main>section{border-top:1.5px dashed var(--line-strong)}
 .cs-main>section:first-child{border-top:0}
