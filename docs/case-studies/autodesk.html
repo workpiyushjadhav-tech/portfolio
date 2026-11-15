@@ -480,7 +480,6 @@ html[data-theme="light"] #cs2{--ink-faint:#6C604D}
 html[data-theme="dark"] #cs2{--accent-btn:#8FADFF}
 #cs2 .sheet{clip-path:inset(0 round 8px 8px 0 0);background-image:linear-gradient(color-mix(in srgb,var(--ink) 6%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--ink) 6%,transparent) 1px,transparent 1px);background-size:44px 44px}
 html[data-a11y-calm] #cs2 .sheet,html[data-a11y-contrast] #cs2 .sheet{background-image:none}
-#cs2 .sheet .wrap{align-items:flex-start;text-align:left}
 #cs2 .sheet-sum{max-width:56ch}
 #cs2 .sheet h1{font-size:clamp(3rem,9vw,7.5rem)}
 #cs2 .card{border-radius:6px;padding:0;overflow:hidden}
@@ -501,6 +500,14 @@ html[data-a11y-calm] #cs2 .sheet,html[data-a11y-contrast] #cs2 .sheet{background
 #cs2 .fun.in .fun-b i,#cs2.rm .fun-b i{transform:none}
 #cs2 .fun-b span{font-size:.9375rem;line-height:1.4;color:var(--ink-soft)}
 @media(max-width:640px){#cs2 .fun-r{grid-template-columns:1fr}#cs2 .fun-b{flex-wrap:wrap}}
+/* ===== fixes ===== */
+#cs2{--gap:24px}
+:root{--sec:clamp(56px,8vw,112px)}
+#cs2 .chapter .blk[style*="padding-bottom"]{padding-bottom:0!important}
+#cs2 .chapter:last-of-type .blk:last-child{padding-bottom:var(--sec)!important}
+#cs2 .dir{padding:clamp(64px,10vw,140px) 0}
+#cs2 .prose+.vr-list{margin-top:28px}
+#cs2 .more{background:var(--paper-dim)}
 </style>
 </head>
 <body class="case-page" id="top">
@@ -544,7 +551,7 @@ html[data-a11y-calm] #cs2 .sheet,html[data-a11y-contrast] #cs2 .sheet{background
 <section class="blk" data-theme="paper"><div class="wrap"><p class="kick">Takeaways</p><h2 class="sec-h disp rv">Key takeaways: decisions and what they cost</h2><ul class="vr-list vr-list--3 rv"><li><b>AI to narrow, people to judge.</b><p>Reading 25,000+ comments line by line wasn’t feasible in six weeks. The AI-assisted first filter made it workable, but it made coding mistakes, so people made the final calls. The cost is that the first filter shaped what we saw.</p></li><li><b>Pushing past the brief.</b><p>The brief asked how to integrate two views. Forecasting was our attempt at a different mental model, proactive rather than reactive, and it stays an exploration.</p></li><li><b>A benchmark as a design anchor.</b><p>An existing clash status lifecycle gave us a pattern to learn from instead of designing resolution tracking from scratch.</p></li></ul></div></section>
 <section class="blk" data-theme="sand" style="padding-bottom:var(--sec)"><div class="wrap"><p class="kick">Unresolved</p><h2 class="sec-h disp rv">What’s unresolved</h2><div class="prose rv"><p><strong>Role-based view logic.</strong> BIM Managers, Engineers and Architects have different needs when reviewing clashes and changes. The prototype addressed integration, but the permission model and role-based views would need a further sprint.</p></div><div class="case-pullquote rv"><p>The brief asked for two levels of work: <em>workflow design</em> (when and where to show clash and change analysis, and to which users) and <em>UI design</em> (how the two sets of results interact in the interface). We worked on both.</p></div><div class="prose rv"><p><strong>Want to go deeper?</strong> The full story has more detail than fits here, including the methods and the decisions behind them. Get in touch for a walkthrough: <a href="mailto:work.piyushjadhav@gmail.com">Email Me (work.piyushjadhav@gmail.com)</a></p></div></div></section>
 </div>
-<section><div class="container"><div><div class="max-w-3xl mx-auto px-4 sm:px-7 case-more-wrap"><h2 class="eyebrow eyebrow--case mb-2">more case studies</h2><div class="case-more-list"><a href="culinarr.html" class="case-more-item"><div><div class="eyebrow">Product Design · Prototyping</div><h3>Culinarr</h3><p>Evidence-led product design: a QR group ordering prototype where research changed the plan and every decision states its cost.</p></div><img src="../images/case-studies/culinarr/01home.avif" width="1200" height="900" loading="lazy" decoding="async" alt="" /></a><a href="dwp.html" class="case-more-item"><div><div class="eyebrow">Service Design · UK Public Sector</div><h3>DWP Bereavement Redesign</h3><p>Research judgement under constraints: when interviews carried too much ethical risk, a switch to public-post analysis led to a three-layer service model.</p></div><img src="../images/case-studies/dwp/dwp_bg.avif" width="1200" height="900" loading="lazy" decoding="async" alt="" /></a></div></div></div></div></section>
+<section class="more"><div class="container"><div><div class="max-w-3xl mx-auto px-4 sm:px-7 case-more-wrap"><h2 class="eyebrow eyebrow--case mb-2">more case studies</h2><div class="case-more-list"><a href="culinarr.html" class="case-more-item"><div><div class="eyebrow">Product Design · Prototyping</div><h3>Culinarr</h3><p>Evidence-led product design: a QR group ordering prototype where research changed the plan and every decision states its cost.</p></div><img src="../images/case-studies/culinarr/01home.avif" width="1200" height="900" loading="lazy" decoding="async" alt="" /></a><a href="dwp.html" class="case-more-item"><div><div class="eyebrow">Service Design · UK Public Sector</div><h3>DWP Bereavement Redesign</h3><p>Research judgement under constraints: when interviews carried too much ethical risk, a switch to public-post analysis led to a three-layer service model.</p></div><img src="../images/case-studies/dwp/dwp_bg.avif" width="1200" height="900" loading="lazy" decoding="async" alt="" /></a></div></div></div></div></section>
 </main>
 </div>
 
