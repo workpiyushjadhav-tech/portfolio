@@ -1091,6 +1091,41 @@ html[data-a11y-calm] .carousel-pause { display: none; }
 .sf-top:hover, .sf-top:focus-visible { color: var(--on-panel, #fbf6ec); }
 @media (max-width: 479px) { .sf-clock { margin-left: 0; } .sf-top { margin-right: 12px; } }
 </style>
+<style id="motion-kit-css">
+/* =========================================================================
+   MOTION KIT (adapted from the Motion Kit GSAP library)
+   Only the components this site uses. Brand tokens, not the kit defaults.
+   Everything here is visible and usable before (or without) JavaScript.
+   ========================================================================= */
+:root {
+  --mk-accent: var(--accent, #DD5A2C);
+  --mk-hand: var(--font-hand, "Caveat"), "Segoe Print", cursive;
+}
+
+/* hand-annotate: hand-drawn underline, strike and circle in red pen */
+.mk-mark { position: relative; display: inline-block; white-space: nowrap; isolation: isolate; }
+.mk-mark svg { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.mk-mark path { fill: none; stroke: var(--mk-accent); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+@media (max-width: 480px) { .mk-mark { white-space: normal; } }
+
+/* text-roll: header links roll up to an accent copy on hover and focus */
+.mk-roll__mask { position: relative; display: inline-block; overflow: hidden; vertical-align: top; }
+.mk-roll__line { display: block; }
+.mk-roll__line + .mk-roll__line { position: absolute; left: 0; top: 100%; color: var(--mk-accent); }
+
+/* read-progress: thin reading bar along the top edge of case studies */
+.mk-read { position: fixed; left: 0; right: 0; top: 0; z-index: calc(var(--z-nav, 20) + 1); height: 3px; pointer-events: none; }
+.mk-read span { display: block; height: 100%; background: var(--mk-accent); transform: scaleX(0); transform-origin: left; }
+
+/* confetti: copy my email */
+.copy-mail { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; margin-top: 14px; }
+.copy-mail-btn { min-height: 44px; padding: 10px 0; border: 0; background: none; font: inherit; font-size: .9375rem; font-weight: 600; color: var(--ink); cursor: pointer; text-decoration: underline; text-decoration-style: dotted; text-decoration-thickness: 1.5px; text-underline-offset: .32em; }
+.copy-mail-btn:hover { text-decoration-style: solid; }
+.copy-mail-btn:focus-visible { outline: 2px solid var(--mk-accent); outline-offset: 3px; border-radius: 4px; }
+.copy-mail-status { min-height: 1.5em; font-family: var(--mk-hand); font-size: 1.3rem; font-weight: 600; line-height: 1.2; color: var(--accent-btn, #B8441B); }
+html[data-theme="dark"] .copy-mail-status { color: var(--accent, #EC7A4E); }
+.mk-confetti__bit { position: fixed; left: 0; top: 0; z-index: 1001; width: 8px; height: 12px; border-radius: 2px; pointer-events: none; }
+</style>
 </head>
 <body>
 <a href="#main" class="skip-link">Skip to content</a>
@@ -1101,8 +1136,9 @@ html[data-a11y-calm] .carousel-pause { display: none; }
 <!-- ── NAVBAR ── -->
 <header class="site-header">
   <a class="brand" href="./" aria-label="Piyush home"><svg class="logo" viewBox="0 0 36 36" width="36" height="36" aria-hidden="true"><rect x="1" y="1" width="34" height="34" rx="11" fill="currentColor"/><path d="M13.5 26V10h6a5 5 0 010 10h-6" fill="none" stroke="var(--paper)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Piyush</span></a>
-  <nav aria-label="Main navigation">
+  <nav aria-label="Main navigation" data-mk="text-roll">
     <a href="#work">Work</a>
+    <a href="about.html">About</a>
     <a href="#contact">Contact</a>
   </nav>
   <div class="header-actions">
@@ -1135,11 +1171,11 @@ html[data-a11y-calm] .carousel-pause { display: none; }
       </span>&nbsp;I'm Piyush!
     </h1>
 
-    <p class="hero-sub">
-      A UI/UX and Product Designer who spent a decade understanding people before designing for them — now crafting intuitive, human-centered tools that meet users where they are.
+    <p class="hero-sub" data-mk="hand-annotate" data-delay="0.9">
+      A <span class="mk-mark" data-mark="underline">UI/UX and Product Designer</span> who spent a decade understanding people before designing for them — now crafting intuitive, human-centered tools that meet users where they are.
     </p>
 
-    <div class="hero-actions">
+    <div class="hero-actions" data-mk="magnetic">
       <a href="#work" class="btn-primary">
         View my work
         <svg class="icn" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1161,7 +1197,7 @@ html[data-a11y-calm] .carousel-pause { display: none; }
   <div class="container">
     <div class="section-header reveal">
       <span class="eyebrow">selected work</span>
-      <h2 class="section-title" id="work-title">Featured Case Studies</h2>
+      <h2 class="section-title" id="work-title" data-mk="split-lines">Featured Case Studies</h2>
       <p class="section-sub">Real problems, real solutions — each project driven by research and refined by iteration.</p>
     </div>
 
@@ -1288,7 +1324,7 @@ html[data-a11y-calm] .carousel-pause { display: none; }
   <div class="container">
     <div class="section-header reveal">
       <span class="eyebrow">Kind Words</span>
-      <h2 class="section-title" id="testimonials-title">What People Say</h2>
+      <h2 class="section-title" id="testimonials-title" data-mk="split-lines">What People Say</h2>
       <p class="section-sub">A few notes from people I&rsquo;ve worked alongside.</p>
     </div>
 
@@ -1308,7 +1344,7 @@ html[data-a11y-calm] .carousel-pause { display: none; }
   <div class="container">
     <div class="section-header reveal">
       <span class="eyebrow">About Me</span>
-      <h2 class="section-title" id="gallery-title">A Few Frames of My World</h2>
+      <h2 class="section-title" id="gallery-title" data-mk="split-lines">A Few Frames of My World</h2>
       <p class="section-sub">Hover or tap a frame to bring it into focus.</p>
     </div>
 
@@ -1329,10 +1365,11 @@ html[data-a11y-calm] .carousel-pause { display: none; }
     <div class="contact-card reveal">
       <div class="contact-left">
         <span class="eyebrow">let's connect</span>
-        <h2 class="section-title" id="contact-title">Got a project in mind?</h2>
+        <h2 class="section-title" id="contact-title" data-mk="split-lines">Got a project in mind?</h2>
         <p class="contact-sub">Whether it's a full product build or just a conversation — I'm always happy to chat design.</p>
+        <div class="copy-mail" data-mk="confetti"><button type="button" class="copy-mail-btn" data-copy="work.piyushjadhav@gmail.com">or copy my email</button><span class="copy-mail-status" role="status" aria-live="polite"></span></div>
       </div>
-      <div class="contact-actions">
+      <div class="contact-actions" data-mk="magnetic">
         <a href="mailto:work.piyushjadhav@gmail.com" class="btn-primary">
           Say hello
           <svg class="icn" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1421,5 +1458,281 @@ html[data-a11y-calm] .carousel-pause { display: none; }
   tick(); setInterval(tick, 30000);
 })();
 </script>
+<script>
+/* safety net: reveal sections as they scroll into view, even if js/site.js fails to load */
+(function () {
+  var els = [].slice.call(document.querySelectorAll('.reveal, .project-card'));
+  var show = function (el) { el.classList.add('visible'); };
+  if (!('IntersectionObserver' in window)) { els.forEach(show); return; }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) { show(e.target); io.unobserve(e.target); } });
+  }, { rootMargin: '0px 0px -8% 0px' });
+  els.forEach(function (el) { io.observe(el); });
+})();
+</script>
+<style id="footer-layout">
+/* Footer: three aligned columns on desktop, one centred stack at 899px and below.
+   Kept clear of the fixed accessibility button in every width. */
+.footer-inner { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--sp-12) var(--sp-24); flex-direction: initial; text-align: left; }
+.footer-left, .sf-clock, .footer-links a { font-size: .8125rem; color: rgba(251,246,236,.72); }
+.footer-left { justify-self: start; text-wrap: pretty; }
+.sf-clock { justify-self: center; margin: 0; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.footer-links { justify-self: end; display: flex; align-items: center; gap: var(--sp-24); }
+.footer-links .sf-top { display: inline-grid; margin: 0; } /* the two labels share one cell, so no ghost gap */
+@media (max-width: 1279px) { .footer-inner { padding-inline: 64px; } }
+@media (max-width: 899px) {
+  footer { padding-bottom: 96px; }
+  .footer-inner { grid-template-columns: 1fr; justify-items: center; text-align: center; padding-inline: 0; gap: var(--sp-8); }
+  .footer-left, .sf-clock, .footer-links { justify-self: center; }
+  .sf-clock { order: 1; }
+  .footer-links { order: 2; }
+  .footer-left { order: 3; margin-top: var(--sp-4); }
+}
+html[data-a11y-contrast] .footer-left, html[data-a11y-contrast] .sf-clock, html[data-a11y-contrast] .footer-links a { color: #fff; }
+</style>
+<!-- GSAP 3.15.1 (pinned) and the plugins this page uses -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.1/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.1/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.1/dist/SplitText.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.1/dist/DrawSVGPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.1/dist/Physics2DPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.1/dist/CustomEase.min.js"></script>
+<script>
+/* =========================================================================
+   MOTION KIT · core (adapted)
+   - Every component is an element with data-mk="name".
+   - Setup runs inside a gsap.context(), so it can all be undone.
+   - Motion is off when the system asks for reduced motion OR when the
+     site's own calm mode is on (html[data-a11y-calm]). Switching either
+     rebuilds every component in its still version, no reload needed.
+   - If GSAP fails to load, nothing is hidden: the page stays as it is.
+   ========================================================================= */
+(function () {
+  var copyFallback = function () {
+    document.querySelectorAll('[data-mk="confetti"]').forEach(function (root) {
+      var btn = root.querySelector('[data-copy]'), status = root.querySelector('.copy-mail-status');
+      if (!btn) return;
+      btn.addEventListener('click', function () {
+        var email = btn.dataset.copy;
+        (navigator.clipboard ? navigator.clipboard.writeText(email) : Promise.reject())
+          .then(function () { status.textContent = 'Copied. Speak soon.'; })
+          .catch(function () { status.textContent = email; });
+      });
+    });
+  };
+  if (!window.gsap || !window.ScrollTrigger) {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', copyFallback); else copyFallback();
+    return;
+  }
+
+  var names = ['ScrollTrigger', 'SplitText', 'DrawSVGPlugin', 'Physics2DPlugin', 'CustomEase'];
+  gsap.registerPlugin.apply(gsap, names.map(function (n) { return window[n]; }).filter(Boolean));
+  var hasCE = !!window.CustomEase;
+  if (hasCE) { CustomEase.create('mk-out', '0.16,1,0.3,1'); CustomEase.create('mk-inOut', '0.76,0,0.24,1'); }
+  var EASE_OUT = hasCE ? 'mk-out' : 'expo.out', EASE_INOUT = hasCE ? 'mk-inOut' : 'power3.inOut';
+  gsap.defaults({ ease: EASE_OUT, duration: 0.8 });
+
+  var html = document.documentElement;
+  var sys = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var motionAllowed = function () { return !sys.matches && !html.hasAttribute('data-a11y-calm'); };
+  var registry = {}, live = new Map();
+
+  function register(name, setup) { registry[name] = setup; }
+  function revert(scope) {
+    scope = scope || document;
+    live.forEach(function (entry, el) {
+      if (scope === document || scope === el || scope.contains(el)) {
+        if (typeof entry.cleanup === 'function') entry.cleanup();
+        entry.ctx.revert();
+        live.delete(el);
+      }
+    });
+  }
+  function init(scope) {
+    scope = scope || document;
+    revert(scope);
+    var motion = motionAllowed();
+    var found = scope !== document && scope.matches('[data-mk]') ? [scope] : [];
+    found.push.apply(found, scope.querySelectorAll('[data-mk]'));
+    found.forEach(function (el) {
+      var setup = registry[el.dataset.mk];
+      if (!setup) return;
+      var cleanup;
+      var ctx = gsap.context(function () { cleanup = setup(el, { motion: motion }); }, el);
+      live.set(el, { ctx: ctx, cleanup: cleanup });
+    });
+    ScrollTrigger.refresh();
+  }
+  var last = motionAllowed();
+  var onChange = function () { var now = motionAllowed(); if (now === last) return; last = now; init(); };
+  if (sys.addEventListener) sys.addEventListener('change', onChange);
+  new MutationObserver(onChange).observe(html, { attributes: true, attributeFilter: ['data-a11y-calm'] });
+
+  window.MotionKit = { register: register, init: init, revert: revert, motionAllowed: motionAllowed };
+
+  /* ---------------------------------------------------------------------
+     split-lines · section headings slide up line by line, each line masked
+     Needs: ScrollTrigger, SplitText
+     --------------------------------------------------------------------- */
+  register('split-lines', function (root, o) {
+    if (!o.motion || !window.SplitText) return;
+    if (root.classList.contains('rv')) root.classList.add('in'); // the case-study fade would double up
+    SplitText.create(root, {
+      type: 'lines', mask: 'lines', autoSplit: true,
+      onSplit: function (self) {
+        return gsap.from(self.lines, { yPercent: 105, duration: 1, stagger: 0.12, scrollTrigger: { trigger: root, start: 'top 88%' } });
+      }
+    });
+  });
+
+  /* ---------------------------------------------------------------------
+     hand-annotate · red-pen underline, strike or circle drawn on view
+     Needs: ScrollTrigger, DrawSVGPlugin
+     data-delay on the root waits for an entrance animation to finish.
+     --------------------------------------------------------------------- */
+  register('hand-annotate', function (root, o) {
+    var marks = gsap.utils.toArray('.mk-mark', root);
+    var NS = 'http://www.w3.org/2000/svg';
+    var shapes = {
+      underline: function (w, h) { return 'M0,' + h * 0.98 + ' C' + w * 0.3 + ',' + h * 0.9 + ' ' + w * 0.7 + ',' + h * 1.08 + ' ' + w + ',' + h * 0.94; },
+      strike: function (w, h) { return 'M-4,' + h * 0.56 + ' C' + w * 0.35 + ',' + h * 0.5 + ' ' + w * 0.65 + ',' + h * 0.62 + ' ' + (w + 4) + ',' + h * 0.52; },
+      circle: function (w, h) {
+        return 'M' + w * 0.14 + ',' + h * 0.02 + ' C' + (-w * 0.08) + ',' + h * 0.35 + ' ' + (-w * 0.02) + ',' + h * 1.12 + ' ' + w * 0.5 + ',' + h * 1.1 + ' ' +
+          'C' + w * 1.06 + ',' + h * 1.06 + ' ' + w * 1.1 + ',' + h * 0.05 + ' ' + w * 0.52 + ',' + (-h * 0.06) + ' ' +
+          'C' + w * 0.25 + ',' + (-h * 0.12) + ' ' + w * 0.02 + ',' + h * 0.0 + ' ' + w * 0.0 + ',' + h * 0.22; // the tail ends outside the words
+      }
+    };
+    var paths = marks.map(function (mark) {
+      var svg = document.createElementNS(NS, 'svg');
+      svg.setAttribute('aria-hidden', 'true');
+      svg.setAttribute('focusable', 'false');
+      var path = document.createElementNS(NS, 'path');
+      svg.appendChild(path);
+      mark.appendChild(svg);
+      return path;
+    });
+    var draw = function () {
+      marks.forEach(function (mark, i) {
+        var w = mark.offsetWidth, h = mark.offsetHeight, svg = paths[i].ownerSVGElement;
+        svg.setAttribute('width', w); svg.setAttribute('height', h); svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+        paths[i].setAttribute('d', (shapes[mark.dataset.mark] || shapes.underline)(w, h));
+      });
+    };
+    draw();
+    var drawn = !o.motion || !window.DrawSVGPlugin;
+    if (!drawn) {
+      gsap.from(paths, {
+        drawSVG: 0, duration: 0.8, ease: 'power2.inOut', stagger: 0.35,
+        delay: Number(root.dataset.delay) || 0,
+        scrollTrigger: { trigger: root, start: 'top 80%' },
+        onComplete: function () { drawn = true; }
+      });
+    }
+    var ro = new ResizeObserver(function () { draw(); if (drawn && window.DrawSVGPlugin) gsap.set(paths, { drawSVG: '100%' }); });
+    ro.observe(root);
+    return function () { ro.disconnect(); paths.forEach(function (p) { p.ownerSVGElement.remove(); }); };
+  });
+
+  /* ---------------------------------------------------------------------
+     text-roll · header links roll to an accent copy on hover and focus
+     Needs: SplitText
+     --------------------------------------------------------------------- */
+  register('text-roll', function (root, o) {
+    if (!o.motion || !window.SplitText) return;
+    var offs = [];
+    gsap.utils.toArray('a', root).forEach(function (link) {
+      var label = link.textContent.trim(), original = link.innerHTML;
+      link.setAttribute('aria-label', label);
+      link.innerHTML = '<span class="mk-roll__mask" aria-hidden="true"><span class="mk-roll__line">' + label + '</span><span class="mk-roll__line">' + label + '</span></span>';
+      var lines = link.querySelectorAll('.mk-roll__line');
+      var a = SplitText.create(lines[0], { type: 'chars' }).chars;
+      var b = SplitText.create(lines[1], { type: 'chars' }).chars;
+      var tl = gsap.timeline({ paused: true, defaults: { duration: 0.32, ease: EASE_INOUT, stagger: 0.015 } })
+        .to(a, { yPercent: -100 }, 0).to(b, { yPercent: -100 }, 0);
+      var on = function () { tl.play(); }, off = function () { tl.reverse(); };
+      link.addEventListener('pointerenter', on); link.addEventListener('focus', on);
+      link.addEventListener('pointerleave', off); link.addEventListener('blur', off);
+      offs.push(function () {
+        link.removeEventListener('pointerenter', on); link.removeEventListener('focus', on);
+        link.removeEventListener('pointerleave', off); link.removeEventListener('blur', off);
+        link.innerHTML = original; link.removeAttribute('aria-label');
+      });
+    });
+    return function () { offs.forEach(function (f) { f(); }); };
+  });
+
+  /* ---------------------------------------------------------------------
+     magnetic · buttons lean towards the pointer (mouse and trackpad only)
+     Needs: GSAP core
+     --------------------------------------------------------------------- */
+  register('magnetic', function (root, o) {
+    var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (!o.motion || !fine) return;
+    var limit = gsap.utils.clamp(-10, 10), offs = [];
+    gsap.utils.toArray('.btn-primary, .btn-ghost', root).forEach(function (el) {
+      var xTo = gsap.quickTo(el, 'x', { duration: 0.5, ease: 'power3' });
+      var yTo = gsap.quickTo(el, 'y', { duration: 0.5, ease: 'power3' });
+      var move = function (e) {
+        var r = el.getBoundingClientRect();
+        xTo(limit((e.clientX - r.left - r.width / 2) * 0.25));
+        yTo(limit((e.clientY - r.top - r.height / 2) * 0.25));
+      };
+      var leave = function () { xTo(0); yTo(0); };
+      el.addEventListener('pointermove', move); el.addEventListener('pointerleave', leave);
+      offs.push(function () { el.removeEventListener('pointermove', move); el.removeEventListener('pointerleave', leave); });
+    });
+    return function () { offs.forEach(function (f) { f(); }); };
+  });
+
+  /* ---------------------------------------------------------------------
+     confetti · copy my email, with a small burst when it works
+     Needs: Physics2DPlugin (the copy works without it)
+     --------------------------------------------------------------------- */
+  register('confetti', function (root, o) {
+    var random = gsap.utils.random;
+    var button = root.querySelector('[data-copy]');
+    var status = root.querySelector('.copy-mail-status');
+    var colours = ['#DD5A2C', '#0E8B78', '#F7DFC7', '#B8441B', '#221E17'];
+    var burst = function () {
+      var r = button.getBoundingClientRect();
+      for (var i = 0; i < 26; i++) {
+        var bit = document.createElement('span');
+        bit.className = 'mk-confetti__bit';
+        bit.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(bit);
+        gsap.set(bit, { x: r.left + r.width / 2, y: r.top + r.height / 2, backgroundColor: random(colours), rotation: random(0, 360) });
+        gsap.to(bit, {
+          duration: random(1.1, 1.7),
+          physics2D: { velocity: random(240, 500), angle: random(-150, -30), gravity: 950 },
+          rotation: '+=' + random(180, 720), autoAlpha: 0, ease: 'power2.in',
+          onComplete: (function (b) { return function () { b.remove(); }; })(bit)
+        });
+      }
+    };
+    var onClick = function () {
+      var email = button.dataset.copy;
+      (navigator.clipboard ? navigator.clipboard.writeText(email) : Promise.reject())
+        .then(function () { status.textContent = 'Copied. Speak soon.'; if (o.motion && window.Physics2DPlugin) burst(); })
+        .catch(function () { status.textContent = email; });
+    };
+    button.addEventListener('click', onClick);
+    return function () { button.removeEventListener('click', onClick); };
+  });
+
+  /* ---------------------------------------------------------------------
+     read-progress · how far through the case study you are
+     Needs: ScrollTrigger (a state, not an animation, so it stays in calm mode)
+     --------------------------------------------------------------------- */
+  register('read-progress', function (root) {
+    var bar = root.querySelector('span');
+    var set = gsap.quickSetter(bar, 'scaleX');
+    ScrollTrigger.create({ start: 0, end: 'max', onUpdate: function (self) { set(self.progress); } });
+  });
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { init(); });
+  else setTimeout(function () { init(); });
+})();
+</script>
+
 </body>
 </html>
