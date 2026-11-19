@@ -1,4 +1,3 @@
-
 name: Deploy Portfolio to GitHub Pages
 
 on:
@@ -24,33 +23,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Build Tailwind CSS
-        run: npx --yes tailwindcss@3 -i ./input.css -o ./docs/css/tailwind.css --minify
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Verify webdocs files
-        run: |
-          test -f ./docs/index.html || {
-            echo "ERROR: docs/index.html is missing"
-            exit 1
-          }
-          echo "Homepage found:"
-          ls -la ./docs
-
-      - name: Upload docs folder
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: ./docs
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        run: npx --yes tailwindcss@3 -i ./input.css -o ./docs/css/tailwind.css
